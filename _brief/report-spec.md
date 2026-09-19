@@ -299,3 +299,6 @@ Design Brief:
 
 ## Tooltip: colors only (2026-09-19)
 - Tooltip text size, font and bold settings removed (they made the tooltip larger and bolder than intended). Only the readability fix stays: light-cyan labels, white values, `#0A1B3D` background at 10 % transparency. Size and weight are Power BI defaults.
+
+## Tooltip size (2026-09-19)
+- Tooltip text size set to 8 pt (2 pt below Power BI's 10 pt default), colors and transparency unchanged.

@@ -307,6 +307,13 @@
                   }
                 }
               }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
             }
           }
         }
@@ -350,7 +357,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filtercd56ac171a64d27759f38c3b",
+        "name": "Filter9529a644d6a7cfbbfbb1964b",
         "field": {
           "Column": {
             "Expression": {

@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.153.json",
-  "name": "NeonHud-02d9400c.json",
+  "name": "NeonHud-5f0a68c9.json",
   "dataColors": [
     "#22D3EE",
     "#3B82F6",
@@ -137,7 +137,8 @@
               "solid": {
                 "color": "#FFFFFF"
               }
-            }
+            },
+            "fontSize": 8
           }
         ],
         "categoryAxis": [

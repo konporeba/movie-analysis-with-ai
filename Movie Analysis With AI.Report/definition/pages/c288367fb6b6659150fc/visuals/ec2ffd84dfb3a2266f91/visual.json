@@ -438,6 +438,13 @@
                   }
                 }
               }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
             }
           }
         }
@@ -481,7 +488,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filterc97c61e4cf18e599f55e09b5",
+        "name": "Filter0ca83cc4d22fdd0112b3864c",
         "field": {
           "Column": {
             "Expression": {
