@@ -442,7 +442,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "9D"
                 }
               }
             }
@@ -488,7 +488,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filter0ca83cc4d22fdd0112b3864c",
+        "name": "Filter7e212bca61ef8e783a107d63",
         "field": {
           "Column": {
             "Expression": {
