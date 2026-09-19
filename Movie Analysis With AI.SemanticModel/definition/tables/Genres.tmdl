@@ -1,0 +1,20 @@
+/// One row per genre; use it to slice or group movies by genre.
+table Genres
+	lineageTag: 7ab851f2-afbe-4dc9-b0cb-6b31ce1a300e
+
+	/// Movie genre (a movie can have several).
+	column Genre
+		dataType: string
+		isKey
+		lineageTag: c91b8b1f-900b-4420-869f-f227ec2b25fb
+		summarizeBy: none
+		sourceColumn: Genre
+
+	partition Genres = m
+		mode: import
+		source =
+				let
+				    Source = Table.Sort(Table.Distinct(Table.SelectColumns(#"Movie Genre Pairs", {"Genre"})), {{"Genre", Order.Ascending}})
+				in
+				    Source
+

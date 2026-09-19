@@ -1,0 +1,8 @@
+# Power BI local caches and user settings (large / machine specific)
+.pbi/
+**/.pbi/
+*.abf
+localSettings.json
+# Source data (33 MB, public TMDB/Kaggle file) - keep locally, not in the repo
+movies_metadata.csv
+_shots/

@@ -1,0 +1,27 @@
+/// Bridge table with one row per movie and genre, so a movie can belong to several genres.
+table MovieGenres
+	lineageTag: 98ca1b11-a154-4d35-8365-773cd02e412a
+
+	column 'Movie ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c417cb18-9e33-4923-b6b6-28ead5cd7a5e
+		summarizeBy: none
+		sourceColumn: Movie ID
+
+	column Genre
+		dataType: string
+		isHidden
+		lineageTag: 0bb6eeef-4d26-4619-bef2-c856953cf8cd
+		summarizeBy: none
+		sourceColumn: Genre
+
+	partition MovieGenres = m
+		mode: import
+		source =
+				let
+				    Source = #"Movie Genre Pairs"
+				in
+				    Source
+

@@ -1,0 +1,249 @@
+/// One row per released, non-adult movie (1874-2020) from the TMDB movies metadata file. Budget and revenue under $10,000 are treated as missing.
+table Movies
+	lineageTag: 7de276c5-08c7-4a09-9599-e6c0a4fb0ba2
+
+	/// TMDB movie identifier.
+	column 'Movie ID'
+		dataType: int64
+		isHidden
+		isKey
+		formatString: 0
+		lineageTag: ef73c756-1d81-4cd1-b80b-633e281c819c
+		summarizeBy: none
+		sourceColumn: Movie ID
+
+	/// Movie title.
+	column Title
+		dataType: string
+		lineageTag: 756945e0-d77f-452f-962b-4cd2bf044a78
+		summarizeBy: none
+		sourceColumn: Title
+
+	/// Marketing tagline; blank when none was recorded.
+	column Tagline
+		dataType: string
+		lineageTag: 4b48d4c0-e342-4063-8dd6-69cc3eba22e0
+		summarizeBy: none
+		sourceColumn: Tagline
+
+	column 'Release Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 10d5503a-cec4-42fa-a6c9-a935dd50eb5f
+		summarizeBy: none
+		sourceColumn: Release Date
+
+	column 'Release Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: b691f20d-a2be-4503-a383-3fac6defe298
+		summarizeBy: none
+		sourceColumn: Release Year
+
+	/// Release decade; everything before 1920 is grouped as Pre-1920.
+	column Decade
+		dataType: string
+		lineageTag: bd8a214e-0262-4a5d-b8cd-5792561b0395
+		summarizeBy: none
+		sourceColumn: Decade
+		sortByColumn: 'Decade Sort'
+
+	column 'Decade Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ea669c8d-c33b-4035-aea3-3dd14a37008c
+		summarizeBy: none
+		sourceColumn: Decade Sort
+
+	column Budget
+		dataType: int64
+		isHidden
+		formatString: $#,##0
+		lineageTag: f114a3b6-655c-47bc-8f62-24f1cc9b7818
+		summarizeBy: none
+		sourceColumn: Budget
+
+	column Revenue
+		dataType: int64
+		isHidden
+		formatString: $#,##0
+		lineageTag: 6d9ace4c-c165-4b61-bbe6-9916448a2182
+		summarizeBy: none
+		sourceColumn: Revenue
+
+	column Profit
+		dataType: int64
+		isHidden
+		formatString: $#,##0
+		lineageTag: 1d91dc8b-3d0c-4654-b63c-2d21340c9a24
+		summarizeBy: none
+		sourceColumn: Profit
+
+	/// Per-movie ROI: (revenue - budget) / budget. Blank unless both budget and revenue are known. Aggregate with the ROI or Median ROI measures.
+	column 'Movie ROI'
+		dataType: decimal
+		isHidden
+		formatString: 0%
+		lineageTag: b9c343b0-b692-4fb8-9688-72ec56b3848e
+		summarizeBy: none
+		sourceColumn: ROI
+
+	/// Yes when both budget and revenue are known (each at least $10,000).
+	column 'Has Financials'
+		dataType: string
+		lineageTag: 0d9ab00b-a6c4-4c5c-8f82-84adff175b9e
+		summarizeBy: none
+		sourceColumn: Has Financials
+
+	column Runtime
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b8696893-af54-494e-83cc-99abbcccf34d
+		summarizeBy: none
+		sourceColumn: Runtime
+
+	column 'Runtime Band'
+		dataType: string
+		lineageTag: badd845a-9f8c-4ed7-98f6-450fea5402d6
+		summarizeBy: none
+		sourceColumn: Runtime Band
+		sortByColumn: 'Runtime Band Sort'
+
+	column 'Runtime Band Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: aa54e58e-adc6-4cf1-b22f-5cedaa75bfd8
+		summarizeBy: none
+		sourceColumn: Runtime Band Sort
+
+	/// Budget size bucket; Unknown when no budget was recorded.
+	column 'Budget Tier'
+		dataType: string
+		lineageTag: 7c6a3095-267b-4744-9444-3b43e7408ded
+		summarizeBy: none
+		sourceColumn: Budget Tier
+		sortByColumn: 'Budget Tier Sort'
+
+	column 'Budget Tier Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2c68aefa-ef1f-49ff-a9d3-f823455fca8b
+		summarizeBy: none
+		sourceColumn: Budget Tier Sort
+
+	column 'Vote Average'
+		dataType: decimal
+		isHidden
+		formatString: 0.0
+		lineageTag: a1ff29c9-5e04-4c4b-b885-3add038c55b9
+		summarizeBy: none
+		sourceColumn: Vote Average
+
+	column 'Vote Count'
+		dataType: int64
+		isHidden
+		formatString: #,##0
+		lineageTag: afb93fc6-d3b5-4766-b5ab-a91e72bee2fd
+		summarizeBy: none
+		sourceColumn: Vote Count
+
+	/// Vote Average multiplied by Vote Count; used for vote-weighted ratings.
+	column 'Vote Points'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: cc517291-d527-46e3-958d-c99a777d08b2
+		summarizeBy: none
+		sourceColumn: Vote Points
+
+	/// Average rating bucket; Unrated when fewer than 10 votes.
+	column 'Rating Band'
+		dataType: string
+		lineageTag: aa900a61-8d5a-41c2-9575-7e0471cbec3b
+		summarizeBy: none
+		sourceColumn: Rating Band
+		sortByColumn: 'Rating Band Sort'
+
+	column 'Rating Band Sort'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c0aecd0c-0840-45f9-8024-6b7eafead07d
+		summarizeBy: none
+		sourceColumn: Rating Band Sort
+
+	column Popularity
+		dataType: decimal
+		isHidden
+		formatString: 0.0
+		lineageTag: a4672956-91d4-46ae-8cb9-4288cd64f2ff
+		summarizeBy: none
+		sourceColumn: Popularity
+
+	/// Original language of the film.
+	column Language
+		dataType: string
+		lineageTag: 164e0c41-5373-4d40-8f26-23f40afc0965
+		summarizeBy: none
+		sourceColumn: Language
+
+	/// First genre listed for the movie.
+	column 'Primary Genre'
+		dataType: string
+		lineageTag: e08be41e-4cb7-4f4d-9628-7fb7f625d658
+		summarizeBy: none
+		sourceColumn: Primary Genre
+
+	column 'Genre Count'
+		dataType: int64
+		formatString: 0
+		lineageTag: 26cef582-8655-44b9-87eb-8cbccc464efd
+		summarizeBy: none
+		sourceColumn: Genre Count
+
+	/// First production country listed for the movie.
+	column 'Primary Country'
+		dataType: string
+		lineageTag: 0aa56503-4571-4944-adec-d551967ffdbc
+		summarizeBy: none
+		sourceColumn: Primary Country
+
+	/// Franchise or collection the movie belongs to, when any.
+	column 'Collection Name'
+		dataType: string
+		lineageTag: 84a083f2-0889-40b7-8ec1-f8d9f7c3d757
+		summarizeBy: none
+		sourceColumn: Collection Name
+
+	/// Per-movie ROI for movies with a budget of $1M or more; used to rank top-return films without micro-budget outliers.
+	column 'Big Budget ROI'
+		dataType: decimal
+		isHidden
+		formatString: 0%
+		lineageTag: 665527f9-4a5b-4937-a818-60fac9c8ca6d
+		summarizeBy: none
+		sourceColumn: Big Budget ROI
+
+	/// Title with release year in brackets; unique per film even when two films share a title.
+	column 'Title and Year'
+		dataType: string
+		lineageTag: ab65b4dd-8385-443e-ba1f-46684ebcf3d1
+		summarizeBy: none
+		sourceColumn: Title and Year
+
+	partition Movies = m
+		mode: import
+		source =
+				let
+				    Source = #"Movies Base",
+				    Movies = Table.RemoveColumns(Source, {"Genre List"}),
+				    WithBigBudgetRoi = Table.AddColumn(Movies, "Big Budget ROI", each if [Budget] <> null and [Budget] >= 1000000 and [ROI] <> null then [ROI] else null, Currency.Type),
+				    WithTitleYear = Table.AddColumn(WithBigBudgetRoi, "Title and Year", each [Title] & " (" & Text.From([Release Year]) & ")", type text),
+				    ShortLabels = Table.TransformColumns(WithTitleYear, {{"Decade", each if _ = "Before 1920" then "Pre-1920" else _, type text}, {"Rating Band", each if _ = "Below 4" then "<4" else _, type text}})
+				in
+				    ShortLabels
+

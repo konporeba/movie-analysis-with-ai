@@ -1,0 +1,9 @@
+relationship 'Movies to MovieGenres'
+	crossFilteringBehavior: bothDirections
+	fromColumn: MovieGenres.'Movie ID'
+	toColumn: Movies.'Movie ID'
+
+relationship 'Genres to MovieGenres'
+	fromColumn: MovieGenres.Genre
+	toColumn: Genres.Genre
+

@@ -1,0 +1,61 @@
+/// Cleaned movie list shared by Movies, Genres and MovieGenres. Excludes corrupt rows, duplicate ids, adult titles, unreleased titles and rows without a release date. Budget/revenue under $10k are treated as missing.
+expression 'Movies Base' =
+		let
+		    Source = Csv.Document(File.Contents("X:\AI Dashboard V2\movies_metadata.csv"), [Delimiter = ",", Columns = 24, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+		    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+		    Kept = Table.SelectColumns(Promoted, {"adult", "belongs_to_collection", "budget", "genres", "id", "original_language", "popularity", "production_countries", "release_date", "revenue", "runtime", "status", "tagline", "title", "vote_average", "vote_count"}),
+		    ToNumber = (t as nullable text) as nullable number => try Number.FromText(t, "en-US") otherwise null,
+		    NameFrom = (t as nullable text) as nullable text => if t = null then null else try (let n = Text.BetweenDelimiters(t, "'name': '", "'") in if n = "" then null else n) otherwise null,
+		    GenreNames = (t as nullable text) as list => if t = null then {} else try List.Transform(Json.Document(Text.ToBinary(Text.Replace(t, "'", """"))), each Record.Field(_, "name")) otherwise {},
+		    LanguageNames = [#"en" = "English", #"fr" = "French", #"it" = "Italian", #"ja" = "Japanese", #"de" = "German", #"es" = "Spanish", #"ru" = "Russian", #"hi" = "Hindi", #"ko" = "Korean", #"zh" = "Chinese", #"sv" = "Swedish", #"pt" = "Portuguese", #"cn" = "Cantonese", #"da" = "Danish", #"fi" = "Finnish", #"nl" = "Dutch", #"pl" = "Polish", #"tr" = "Turkish", #"el" = "Greek", #"ta" = "Tamil", #"te" = "Telugu", #"cs" = "Czech", #"hu" = "Hungarian", #"he" = "Hebrew", #"no" = "Norwegian", #"ar" = "Arabic", #"th" = "Thai", #"fa" = "Persian", #"ml" = "Malayalam", #"bn" = "Bengali", #"ro" = "Romanian", #"id" = "Indonesian", #"uk" = "Ukrainian", #"ca" = "Catalan", #"sr" = "Serbian", #"hr" = "Croatian", #"bg" = "Bulgarian", #"is" = "Icelandic", #"ur" = "Urdu", #"vi" = "Vietnamese", #"la" = "Latin"],
+		    WithId = Table.AddColumn(Kept, "Movie ID", each ToNumber([id]), Int64.Type),
+		    Valid = Table.SelectRows(WithId, each [Movie ID] <> null and [adult] = "False" and [status] = "Released" and [title] <> null),
+		    Unique = Table.Distinct(Valid, {"Movie ID"}),
+		    Cleaned = Table.TransformColumns(Unique, {
+		        {"budget", each let n = ToNumber(_) in if n = null or n < 10000 then null else Number.Round(n), Int64.Type},
+		        {"revenue", each let n = ToNumber(_) in if n = null or n < 10000 then null else Number.Round(n), Int64.Type},
+		        {"runtime", each let n = ToNumber(_) in if n = null or n <= 0 then null else Number.Round(n), Int64.Type},
+		        {"popularity", each ToNumber(_), Currency.Type},
+		        {"vote_average", each ToNumber(_), Currency.Type},
+		        {"vote_count", each let n = ToNumber(_) in if n = null then 0 else Number.Round(n), Int64.Type},
+		        {"release_date", each try Date.FromText(_, [Format = "yyyy-MM-dd", Culture = "en-US"]) otherwise null, type nullable date}
+		    }),
+		    WithYear = Table.AddColumn(Cleaned, "Release Year", each if [release_date] = null then null else Date.Year([release_date]), Int64.Type),
+		    Dated = Table.SelectRows(WithYear, each [Release Year] <> null),
+		    WithDecade = Table.AddColumn(Dated, "Decade Sort", each if [Release Year] < 1920 then 1910 else Number.IntegerDivide([Release Year], 10) * 10, Int64.Type),
+		    WithDecadeLabel = Table.AddColumn(WithDecade, "Decade", each if [Decade Sort] = 1910 then "Before 1920" else Text.From([Decade Sort]) & "s", type text),
+		    WithProfit = Table.AddColumn(WithDecadeLabel, "Profit", each if [budget] <> null and [revenue] <> null then [revenue] - [budget] else null, Int64.Type),
+		    WithRoi = Table.AddColumn(WithProfit, "ROI", each if [budget] <> null and [revenue] <> null then ([revenue] - [budget]) / [budget] else null, Currency.Type),
+		    WithFin = Table.AddColumn(WithRoi, "Has Financials", each if [budget] <> null and [revenue] <> null then "Yes" else "No", type text),
+		    WithRuntimeSort = Table.AddColumn(WithFin, "Runtime Band Sort", each if [runtime] = null then 6 else if [runtime] < 60 then 1 else if [runtime] < 90 then 2 else if [runtime] < 120 then 3 else if [runtime] < 150 then 4 else 5, Int64.Type),
+		    WithRuntimeBand = Table.AddColumn(WithRuntimeSort, "Runtime Band", each {"Under 60 min", "60-89 min", "90-119 min", "120-149 min", "150+ min", "Unknown"}{[Runtime Band Sort] - 1}, type text),
+		    WithTierSort = Table.AddColumn(WithRuntimeBand, "Budget Tier Sort", each if [budget] = null then 6 else if [budget] < 1000000 then 1 else if [budget] < 10000000 then 2 else if [budget] < 50000000 then 3 else if [budget] < 100000000 then 4 else 5, Int64.Type),
+		    WithTier = Table.AddColumn(WithTierSort, "Budget Tier", each {"Under $1M", "$1M-$10M", "$10M-$50M", "$50M-$100M", "$100M+", "Unknown"}{[Budget Tier Sort] - 1}, type text),
+		    WithRatingSort = Table.AddColumn(WithTier, "Rating Band Sort", each if [vote_count] < 10 then 7 else if [vote_average] < 4 then 1 else if [vote_average] < 5 then 2 else if [vote_average] < 6 then 3 else if [vote_average] < 7 then 4 else if [vote_average] < 8 then 5 else 6, Int64.Type),
+		    WithRating = Table.AddColumn(WithRatingSort, "Rating Band", each {"Below 4", "4-5", "5-6", "6-7", "7-8", "8+", "Unrated"}{[Rating Band Sort] - 1}, type text),
+		    WithPoints = Table.AddColumn(WithRating, "Vote Points", each [vote_average] * [vote_count], Currency.Type),
+		    WithLanguage = Table.AddColumn(WithPoints, "Language", each if [original_language] = null then "Unknown" else try Record.Field(LanguageNames, [original_language]) otherwise Text.Upper([original_language]), type text),
+		    WithGenreList = Table.AddColumn(WithLanguage, "Genre List", each GenreNames([genres]), type list),
+		    WithPrimaryGenre = Table.AddColumn(WithGenreList, "Primary Genre", each if List.Count([Genre List]) = 0 then "Unknown" else [Genre List]{0}, type text),
+		    WithGenreCount = Table.AddColumn(WithPrimaryGenre, "Genre Count", each List.Count([Genre List]), Int64.Type),
+		    WithCountry = Table.AddColumn(WithGenreCount, "Primary Country", each let c = NameFrom([production_countries]) in if c = null then "Unknown" else if c = "United States of America" then "United States" else c, type text),
+		    WithCollection = Table.AddColumn(WithCountry, "Collection Name", each NameFrom([belongs_to_collection]), type nullable text),
+		    Renamed = Table.RenameColumns(WithCollection, {{"title", "Title"}, {"tagline", "Tagline"}, {"release_date", "Release Date"}, {"budget", "Budget"}, {"revenue", "Revenue"}, {"runtime", "Runtime"}, {"vote_average", "Vote Average"}, {"vote_count", "Vote Count"}, {"popularity", "Popularity"}}),
+		    Final = Table.SelectColumns(Renamed, {"Movie ID", "Title", "Tagline", "Release Date", "Release Year", "Decade", "Decade Sort", "Budget", "Revenue", "Profit", "ROI", "Has Financials", "Runtime", "Runtime Band", "Runtime Band Sort", "Budget Tier", "Budget Tier Sort", "Vote Average", "Vote Count", "Vote Points", "Rating Band", "Rating Band Sort", "Popularity", "Language", "Primary Genre", "Genre Count", "Primary Country", "Collection Name", "Genre List"})
+		in
+		    Final
+	lineageTag: 89e5374b-4cdd-4e04-a73e-faf07f1e96c0
+
+/// One row per movie and genre, exploded from the Genre List column of Movies Base.
+expression 'Movie Genre Pairs' =
+		let
+		    Source = #"Movies Base",
+		    Slim = Table.SelectColumns(Source, {"Movie ID", "Genre List"}),
+		    Expanded = Table.ExpandListColumn(Slim, "Genre List"),
+		    Renamed = Table.RenameColumns(Expanded, {{"Genre List", "Genre"}}),
+		    NoBlanks = Table.SelectRows(Renamed, each [Genre] <> null),
+		    Typed = Table.TransformColumnTypes(NoBlanks, {{"Movie ID", Int64.Type}, {"Genre", type text}})
+		in
+		    Typed
+	lineageTag: 9d202e00-c2f7-4c61-9eaf-6c4d8e8af240
+
