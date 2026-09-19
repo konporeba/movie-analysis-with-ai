@@ -11,7 +11,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "NeonHud-95d2dae5.json",
+      "name": "NeonHud-02d9400c.json",
       "reportVersionAtImport": {
         "visual": "2.12.0",
         "report": "3.4.0",
@@ -68,8 +68,8 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "NeonHud-95d2dae5.json",
-          "path": "NeonHud-95d2dae5.json",
+          "name": "NeonHud-02d9400c.json",
+          "path": "NeonHud-02d9400c.json",
           "type": "CustomTheme"
         },
         {

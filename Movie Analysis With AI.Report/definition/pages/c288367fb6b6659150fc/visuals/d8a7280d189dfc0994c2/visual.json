@@ -320,27 +320,6 @@
                   }
                 }
               }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Segoe UI'"
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
             }
           }
         }
@@ -384,7 +363,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filterc95c0372feb0fc24e8a72928",
+        "name": "Filter8af9dcc45d0bc0d69dc87bf4",
         "field": {
           "Column": {
             "Expression": {

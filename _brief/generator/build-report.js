@@ -97,7 +97,7 @@ function vco({ title, alt, pad = 14 }) {
     : [{ properties: { show: B(false) } }];
   if (alt) o.general = [{ properties: { altText: S(alt) } }];
   o.subTitle = [{ properties: { show: B(false) } }];
-  o.visualTooltip = [{ properties: { show: B(true), type: S('Default'), background: C('#0A1B3D'), transparency: D(10), titleFontColor: C('#7DE3F4'), valueFontColor: C('#FFFFFF'), fontSize: D(13), fontFamily: S(BODY_FONT), bold: B(true) } }];
+  o.visualTooltip = [{ properties: { show: B(true), type: S('Default'), background: C('#0A1B3D'), transparency: D(10), titleFontColor: C('#7DE3F4'), valueFontColor: C('#FFFFFF'), } }];
   o.padding = [{ properties: { top: D(pad), bottom: D(pad), left: D(pad), right: D(pad) } }];
   return o;
 }
@@ -498,7 +498,7 @@ const theme = {
       dropShadow: [{ show: true, color: txt(CYAN), position: 'Outer', preset: 'Custom', shadowBlur: 14, shadowDistance: 0, shadowSpread: 0, angle: 45, transparency: 82 }],
       padding: [{ top: 14, bottom: 14, left: 14, right: 14 }],
       visualHeader: [{ show: false }],
-      visualTooltip: [{ show: true, type: 'Default', background: txt('#0A1B3D'), themedBackground: txt('#0A1B3D'), transparency: 10, titleFontColor: txt('#7DE3F4'), themedTitleFontColor: txt('#7DE3F4'), valueFontColor: txt('#FFFFFF'), themedValueFontColor: txt('#FFFFFF'), fontSize: 13, fontFamily: BODY_FONT, bold: true }],
+      visualTooltip: [{ show: true, type: 'Default', background: txt('#0A1B3D'), themedBackground: txt('#0A1B3D'), transparency: 10, titleFontColor: txt('#7DE3F4'), themedTitleFontColor: txt('#7DE3F4'), valueFontColor: txt('#FFFFFF'), themedValueFontColor: txt('#FFFFFF'), }],
       categoryAxis: [{ gridlineStyle: 'dotted', gridlineColor: txt(GRID) }],
       valueAxis: [{ gridlineStyle: 'dotted', gridlineColor: txt(GRID) }],
     } },

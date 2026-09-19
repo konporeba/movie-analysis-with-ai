@@ -296,3 +296,6 @@ Design Brief:
 - All 44 measures moved from `Movies` into a dedicated `_Measures` table (hidden placeholder column, display folders kept). Supersedes the earlier "measures live in Movies" note; report visuals now bind to `_Measures`.
 - Pink `#F472B6` replaced by amber `#FBBF24` (ROI charts, Median ROI / Profitable films / Films in selection KPI cards, negative deltas).
 - Tooltips keep the readable colors (light-cyan labels, white bold values, 10 % transparency) but use the normal 13 pt size.
+
+## Tooltip: colors only (2026-09-19)
+- Tooltip text size, font and bold settings removed (they made the tooltip larger and bolder than intended). Only the readability fix stays: light-cyan labels, white values, `#0A1B3D` background at 10 % transparency. Size and weight are Power BI defaults.

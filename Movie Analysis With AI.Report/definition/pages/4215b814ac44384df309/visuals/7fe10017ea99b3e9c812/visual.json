@@ -314,27 +314,6 @@
                   }
                 }
               }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "fontFamily": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Segoe UI'"
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
             }
           }
         }
@@ -378,7 +357,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filterd675222443d33e6534498ede",
+        "name": "Filter7b2ec013eaf3d2bfeb2fcec5",
         "field": {
           "Column": {
             "Expression": {
@@ -436,7 +415,7 @@
         "howCreated": "User"
       },
       {
-        "name": "Filter6d910ec159a58c53b79ea21d",
+        "name": "Filteraf3ec7cb7819910143ad9e79",
         "field": {
           "Column": {
             "Expression": {
