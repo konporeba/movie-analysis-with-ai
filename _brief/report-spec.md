@@ -302,3 +302,6 @@ Design Brief:
 
 ## Tooltip size (2026-09-19)
 - Tooltip text size set to 9 pt (was 8 pt; Power BI default is 10 pt), colors and transparency unchanged.
+
+## Accent color: signal green (2026-09-19)
+- Amber replaced by signal green `#4ADE80` (ROI charts, Median ROI / Profitable films / Films in selection cards). "Worse than average" arrows and the theme's `bad` color are orange `#FB923C`; theme `neutral` is sky `#60A5FA`.

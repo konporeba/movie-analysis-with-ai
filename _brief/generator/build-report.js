@@ -16,7 +16,7 @@ const SCHEMA_PAGE = 'https://developer.microsoft.com/json-schemas/fabric/item/re
 // ---------- palette ----------
 const BG = '#050B1A', CARD = '#0B1730', CARD2 = '#10203F', BAND = '#070F22', BORDER = '#1F4A80', GRID = '#1A2E55';
 const TEXT = '#EAF2FF', MUTED = '#9DB4D8';
-const CYAN = '#22D3EE', BLUE = '#3B82F6', SKY = '#60A5FA', VIOLET = '#A78BFA', PINK = '#FBBF24', TEAL = '#2DD4BF';
+const CYAN = '#22D3EE', BLUE = '#3B82F6', SKY = '#60A5FA', VIOLET = '#A78BFA', PINK = '#4ADE80', TEAL = '#2DD4BF';
 const HEAD_FONT = 'Bahnschrift SemiBold', BODY_FONT = 'Segoe UI', BODY_BOLD = 'Segoe UI Semibold';
 
 // ---------- expression helpers ----------
@@ -481,8 +481,8 @@ const txt = hexv => ({ solid: { color: hexv } });
 const theme = {
   $schema: 'https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.153.json',
   name: THEME_FILE,
-  dataColors: [CYAN, BLUE, VIOLET, PINK, TEAL, SKY, '#FBBF24', '#34D399'],
-  good: '#34D399', neutral: '#FBBF24', bad: '#FBBF24', maximum: CYAN, center: BLUE, minimum: '#12305C', null: '#4B5F86',
+  dataColors: [CYAN, BLUE, VIOLET, PINK, TEAL, SKY, '#FB923C', '#34D399'],
+  good: '#34D399', neutral: '#60A5FA', bad: '#FB923C', maximum: CYAN, center: BLUE, minimum: '#12305C', null: '#4B5F86',
   foreground: TEXT, background: CARD, secondaryBackground: CARD2, tableAccent: CYAN,
   firstLevelElements: TEXT, secondLevelElements: MUTED, thirdLevelElements: GRID, fourthLevelElements: BORDER,
   textClasses: {

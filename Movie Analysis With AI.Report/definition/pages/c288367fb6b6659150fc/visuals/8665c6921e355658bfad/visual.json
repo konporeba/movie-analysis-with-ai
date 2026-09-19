@@ -79,7 +79,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#FBBF24'"
+                      "Value": "'#4ADE80'"
                     }
                   }
                 }
@@ -357,7 +357,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filter8f6cb1d9ae822966954f4a9d",
+        "name": "Filter0a3fd9c22197083f4ec254d6",
         "field": {
           "Column": {
             "Expression": {

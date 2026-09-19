@@ -193,7 +193,7 @@ table _Measures
 			VAR _score = COALESCE([Weighted Rating], 0)
 			VAR _value = FORMAT(_score, "0.00", "en-US")
 			VAR _delta = COALESCE([Rating vs All Films], 0)
-			VAR _dcol = IF(_delta >= 0, "#34D399", "#FBBF24")
+			VAR _dcol = IF(_delta >= 0, "#34D399", "#FB923C")
 			VAR _arrow = IF(_delta >= 0, "&#9650; +", "&#9660; ")
 			VAR _context = "<span style='color:" & _accent & ";letter-spacing:2px'>" & [Rating Stars] & "</span> <span style='color:" & _dcol & "'>" & _arrow & FORMAT(_delta, "0.00", "en-US") & "</span> vs all"
 			VAR _pct = ROUND(MIN(_score / 10, 1) * 100, 0)
@@ -264,7 +264,7 @@ table _Measures
 			VAR _m = COALESCE([Avg Runtime], 0)
 			VAR _value = FORMAT(_m, "0", "en-US") & "<span style='font-size:22px;color:#9DB4D8'> min</span>"
 			VAR _delta = COALESCE([Runtime vs All Films], 0)
-			VAR _dcol = IF(_delta >= 0, "#34D399", "#FBBF24")
+			VAR _dcol = IF(_delta >= 0, "#34D399", "#FB923C")
 			VAR _arrow = IF(_delta >= 0, "&#9650; +", "&#9660; ")
 			VAR _context = "<span style='color:" & _dcol & "'>" & _arrow & FORMAT(ABS(_delta), "0", "en-US") & " min</span> vs all films"
 			VAR _pct = ROUND(MAX(MIN(_m / 180, 1), 0) * 100, 0)
@@ -282,9 +282,9 @@ table _Measures
 
 	/// HTML card for the HTML Content visual: share of profitable films among films with known financials, with a rate bar.
 	measure 'KPI Hit Rate HTML' =
-			VAR _accent = "#FBBF24"
-			VAR _glow = "rgba(251,191,36,.5)"
-			VAR _tint = "rgba(251,191,36,.14)"
+			VAR _accent = "#4ADE80"
+			VAR _glow = "rgba(74,222,128,.5)"
+			VAR _tint = "rgba(74,222,128,.14)"
 			VAR _label = "PROFITABLE FILMS"
 			VAR _hr = COALESCE([Hit Rate], 0)
 			VAR _value = FORMAT(_hr, "0%", "en-US")
@@ -304,8 +304,8 @@ table _Measures
 
 	/// Compact HTML card: median ROI multiple with a bar (3x = full).
 	measure 'KPI Median ROI HTML' =
-			VAR _acc = "#FBBF24"
-			VAR _rgb = "251,191,36"
+			VAR _acc = "#4ADE80"
+			VAR _rgb = "74,222,128"
 			VAR _v = COALESCE([Median ROI], 0)
 			VAR _label = "MEDIAN ROI"
 			VAR _value = FORMAT(_v, "0.0", "en-US") & "x"
@@ -493,8 +493,8 @@ table _Measures
 
 	/// Compact HTML card: number of films in the selection with the share that has enough votes to be rated.
 	measure 'KPI Films Shown HTML' =
-			VAR _acc = "#FBBF24"
-			VAR _rgb = "251,191,36"
+			VAR _acc = "#4ADE80"
+			VAR _rgb = "74,222,128"
 			VAR _n = COALESCE([Movies], 0)
 			VAR _rated = COALESCE(DIVIDE([Rated Movies], _n, 0), 0)
 			VAR _label = "FILMS IN SELECTION"

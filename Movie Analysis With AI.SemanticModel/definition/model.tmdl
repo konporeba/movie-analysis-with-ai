@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["movies_metadata"]
+annotation PBI_QueryOrder = ["Movies","MovieGenres","Genres","_Measures","Movies Base","Movie Genre Pairs"]
 
 annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
 
