@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "ec2ffd84dfb3a2266f91",
   "position": {
     "x": 32,
@@ -32,6 +32,24 @@
             }
           ]
         },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Votes"
+                }
+              },
+              "queryRef": "_Measures.Total Votes",
+              "nativeQueryRef": "Total Votes"
+            }
+          ]
+        },
         "X": {
           "projections": [
             {
@@ -46,7 +64,8 @@
                 }
               },
               "queryRef": "_Measures.Budget (USD M)",
-              "nativeQueryRef": "Budget (USD M)"
+              "nativeQueryRef": "Budget (USD M)",
+              "active": true
             }
           ]
         },
@@ -65,24 +84,6 @@
               },
               "queryRef": "_Measures.Revenue (USD M)",
               "nativeQueryRef": "Revenue (USD M)"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total Votes"
-                }
-              },
-              "queryRef": "_Measures.Total Votes",
-              "nativeQueryRef": "Total Votes"
             }
           ]
         }

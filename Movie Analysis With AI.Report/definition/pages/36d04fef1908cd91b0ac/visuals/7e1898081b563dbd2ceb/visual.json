@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "7e1898081b563dbd2ceb",
   "position": {
     "x": 816,
@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "_Measures.Total Votes",
-              "nativeQueryRef": "Total Votes"
+              "nativeQueryRef": "Total Votes",
+              "active": true
             }
           ]
         },

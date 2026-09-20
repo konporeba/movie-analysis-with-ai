@@ -68,14 +68,14 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "NeonHud-22118029.json",
-          "path": "NeonHud-22118029.json",
-          "type": "CustomTheme"
-        },
-        {
           "name": "grid-bg1758300000000000001.png",
           "path": "grid-bg1758300000000000001.png",
           "type": "Image"
+        },
+        {
+          "name": "NeonHud-22118029.json",
+          "path": "NeonHud-22118029.json",
+          "type": "CustomTheme"
         }
       ]
     }
@@ -86,6 +86,7 @@
     "defaultDrillFilterOtherVisuals": true,
     "allowChangeFilterTypes": true,
     "useEnhancedTooltips": true,
+    "filterPaneHiddenInEditMode": true,
     "useDefaultAggregateDisplayName": true
   }
 }

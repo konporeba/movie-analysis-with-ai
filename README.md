@@ -1,6 +1,6 @@
 # Movie Analysis With AI
 
-A four-page, dark "Neon HUD" Power BI dashboard about the history of cinema (1874–2020): how many films were made, how well they were rated, and where the money is. It is stored as a Power BI Project (PBIP), so the model and report are plain text files that work with Git.
+A four-page, dark "Neon HUD" Power BI dashboard about the history of cinema (1874–2017): how many films were made, how well they were rated, and where the money is. It is stored as a Power BI Project (PBIP), so the model and report are plain text files that work with Git.
 
 The report was built with Claude Code and the Power BI authoring tools.
 
@@ -16,11 +16,11 @@ The report was built with Claude Code and the Power BI authoring tools.
 | Page | Focus |
 |---|---|
 | **Overview** | Headline KPI cards, films released per year, top genres, rating distribution, top languages, revenue by decade. Slicers: Decade, Genre, Language. |
-| **Money and Success** | Budget vs revenue, ROI by genre and budget tier, rating by runtime band, top ROI films. |
-| **Genre and Country** | Weighted rating and average revenue by genre, a genre × decade rating heatmap, top production countries. |
-| **Title Explorer** | Top titles by revenue, votes vs rating, and a ranked title table with rating bars. |
+| **Money and Success** | Budget vs revenue scatter, median ROI by genre and budget tier, rating by budget tier, top ROI films. Slicers: Decade, Language, Budget tier, Genre. |
+| **Genre and Country** | Weighted rating and average revenue by genre, rating by decade, top production countries. Slicers: Decade, Language. |
+| **Title Explorer** | Top titles by revenue, votes vs rating, and a ranked title table with rating bars. Slicers: Decade, Genre, Language. |
 
-The KPI cards are HTML/SVG strings built with DAX measures (the `KPI … HTML` and `Rating Bar SVG` measures). Every visual has alt text.
+The KPI cards are HTML/SVG strings built with DAX measures (the `KPI … HTML` and `Rating Bar SVG` measures). Every chart, card and table has alt text.
 
 ## Semantic model
 
@@ -41,12 +41,12 @@ Notable measures:
 
 ### Data cleaning (Power Query)
 
-Applied in the `Movies` partition:
+Applied in the shared `Movies` query (`expressions.tmdl`):
 
 - The CSV is parsed with `QuoteStyle.Csv` so multi-line overviews don't break rows.
-- 3 corrupt shifted rows, 30 duplicate ids, 9 adult titles and all films that are not `Released` are dropped.
+- Corrupt shifted rows, duplicate ids, adult titles, films without a release date and all films that are not `Released` are dropped.
 - Numeric columns are typed with the `en-US` culture, so results don't depend on the machine's locale.
-- A `0` budget, revenue or runtime means "unknown" in this dataset, so it is converted to `null`. About 80% of budgets are missing, and the financial pages only cover films that have them.
+- Budget and revenue under $10,000, and a runtime of 0, mean "unknown" in this dataset, so they are converted to `null`. About 80% of budgets are missing, and the financial pages only cover films that have them.
 - The JSON-like text columns are parsed into Primary Genre, Primary Country, Collection Name and the genre bridge table.
 
 ## Data source
@@ -68,7 +68,7 @@ Requirements: Windows and [Power BI Desktop](https://powerbi.microsoft.com/deskt
 Movie Analysis With AI.pbip            Project entry point
 Movie Analysis With AI.SemanticModel/  Semantic model (TMDL): tables, measures, relationships
 Movie Analysis With AI.Report/         Report (PBIR): pages, visuals, "Neon HUD" theme
-_brief/                                Original report spec and the script that generated the report
+_brief/                                Report spec and the script that generated the report
 ```
 
 ## Credits

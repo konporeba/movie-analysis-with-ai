@@ -1,264 +1,92 @@
 # Report Spec
 
+Current state of the report as of 2026-09-20. It describes what is built now; the design has changed a lot since the first brief. The dated log at the end of this file records how it got here, and where it disagrees with the sections below, the sections below win.
+
 ## Report identity
 - Report name: Movie Analysis With AI
-- Semantic model: `Movie Analysis With AI.SemanticModel` (local PBIP, import mode, source `movies_metadata.csv`, ~45k rows)
-- Audience: Movie enthusiasts / analysts exploring the film universe (1874–2020)
-- Primary purpose: Understand the story of cinema (volume, quality, money) and find which genres, eras, budgets and titles win
-- Delivery target: Local PBIP only (publishing decided later)
-
-## User decisions and constraints
-- Scope: Full dashboard proposed by Claude: content, layout, data transformation, measures, visuals
-- Page count: 4
-- Palette (mandatory): `#0F2854` `#1C4D8D` `#4988C4` `#BDE8F5`
-- "HTML-style" visuals: Power BI cannot execute arbitrary HTML/JS without an AppSource custom visual (not importable offline). Substitute: native visuals with heavy theming + DAX-generated SVG (rating bars / stars) rendered as images inside tables and cards. A standalone HTML artifact copy can be added afterwards if wanted.
-- Tooling: Power BI Desktop installed (`PBIDesktop.exe`), `powerbi-desktop` + `powerbi-report-author` CLIs present, modeling MCP connected (offline TMDL)
-- Accessibility: WCAG AA text contrast, alt text on every visual
-- Data caveats: see Data transformation
+- Format: local Power BI Project (PBIP), PBIR report + TMDL semantic model, import mode
+- Semantic model: `Movie Analysis With AI.SemanticModel`, source `movies_metadata.csv` (Kaggle "The Movies Dataset", TMDB metadata), 44,899 films after cleaning, 1874-2017 (2017 is a partial year)
+- Audience: movie enthusiasts and analysts exploring the film universe
+- Purpose: understand the story of cinema (volume, quality, money) and find which genres, decades, budgets and titles stand out
+- Delivery: local PBIP in a public GitHub repo (`konporeba/movie-analysis-with-ai`); not published to the Power BI service
 
 ## Narrative
-- Core story: Cinema exploded in volume after 1990, ratings stay stable, but money is concentrated in a few genres/budgets; big budgets raise revenue but not quality.
-- Key questions: How much is made, and when? Which genres/languages dominate? Does money buy quality or return? Which titles are best/biggest?
+- Core story: film output more than tripled since the 1980s while ratings slipped; money buys revenue, not better ratings; Drama leads in volume, while War and History films rate highest.
+- Key questions: How much is made, and when? Which genres, languages and countries dominate? Does money buy quality or return? Which titles are the best rated, the biggest earners and the most voted?
 
-## Design identity
-- Tone: **Midnight Cinema**: deep navy editorial header band, light data cards on a pale cyan canvas
-- Signature: full-width navy title band with big display title + **SVG rating bars/stars** and rank-numbered leaderboards recurring on every page
-- Typography: Segoe UI Semibold titles / Segoe UI body; tabular numerals for KPIs
+## Design: Neon HUD
+- Tone: dark digital heads-up display. Canvas `#050B1A` with a generated grid background image (`grid-bg…png`), cards `#0B1730` with a cyan glow, a small cyan rule and a Consolas eyebrow above each page title. No header band; the title and slicers sit directly on the grid.
+- Typography: Bahnschrift for titles and KPI values, Consolas for eyebrows, Segoe UI for chart text. Sizes: page title 36, KPI values 40, chart titles 18, axis and data labels 12-13, table text 14, slicers 13-14.
+- Theme: custom `NeonHud` (`StaticResources/RegisteredResources/NeonHud-22118029.json`) on top of the Fluent2 base theme.
+  - Theme colors: foreground `#EAF2FF`, background `#0B1730`, secondary background `#10203F`, second-level text `#9DB4D8`.
+  - Data colors: `#22D3EE`, `#3B82F6`, `#A78BFA`, `#4ADE80`, `#2DD4BF`, `#60A5FA`, `#FB923C`, `#34D399`.
+  - Status colors: good `#34D399`, neutral `#60A5FA`, bad `#FB923C`.
+- Color semantics: cyan `#22D3EE` = film counts, violet `#A78BFA` = ratings, blue `#3B82F6` = revenue and budget, signal green `#4ADE80` = ROI and profit, orange `#FB923C` = worse than average.
+- Tooltips: styled in the theme and on every data visual. Light-cyan `#7DE3F4` labels, white values, background `#0A1B3D` at 10 % transparency, 9 pt.
+- Signature elements: HTML/SVG KPI cards (glow accent, value, context line, progress bar) and DAX-generated rating bars in the title table.
+- Accessibility: alt text on every chart, KPI card and table. Text is light on dark navy; accent colors are used for graphics and large values.
+- "HTML-style" visuals: Power BI cannot run arbitrary HTML, so the KPI cards use the AppSource **HTML Content** visual (`htmlContent443BE3AD55E043BF878BED274D3A6855`, data role `content`). Each card is a DAX measure that returns an HTML string.
 
-## Data transformation (Power Query, in the `Movies` partition)
-Current partition is faulty: `QuoteStyle.None` breaks multi-line/quoted overviews, numbers are typed without culture (locale-dependent), `budget`/`popularity`/`release_date` are text.
-1. `Csv.Document(..., QuoteStyle.Csv)`, 24 columns, UTF-8
-2. Drop 3 corrupt shifted rows (non-numeric `id`), drop 30 duplicate ids, drop 9 `adult = True`, keep `status = Released` only (drops 365 unreleased/rumored)
-3. Types with `en-US` culture: budget/revenue/runtime → whole number; popularity, vote_average → decimal; vote_count → whole; release_date → date
-4. `0` budget / revenue / runtime → `null` (0 means "unknown" in this dataset; ~80% of budgets)
-5. Parse JSON-ish text columns → `Primary Genre`, `Genre Count`, `Primary Country`, `Collection Name`; language code → `Language` (name lookup for top ~30 codes, else code)
-6. New tables: `Genres` (dim: Genre) and `MovieGenres` (bridge MovieId ↔ Genre, exploded from `genres`)
-7. Drop unused heavy columns: `homepage`, `poster_path`, `video`, `spoken_languages`, `production_companies`, raw JSON columns, `overview` (kept: `tagline`, `title`)
+## Pages (1920 x 1080)
+All four pages share the same skeleton: a title block at top left (eyebrow, page title, cyan rule) and header slicers at top right. Below them is a KPI row of HTML cards, then chart panels. Cross-filtering is on for every chart pair, slicers are page-local, and there is no filter pane in edit mode.
 
-### Model
-| Table | Grain | Key columns |
+| # | Page | Title | Slicers | KPI cards | Visuals |
+|---|---|---|---|---|---|
+| 1 | Overview (landing) | Film Output Tripled Since the 1980s While Ratings Slipped | Decade, Genre, Language | 6: Films, Rating, Revenue, Budget, Runtime, Hit Rate | Films released per year (line), Films per genre (bar), Rating distribution (column), Top 8 languages (bar), Revenue by decade (column) |
+| 2 | Money and Success | Bigger Budgets Buy Revenue, Not Better Ratings | Decade, Language, Budget tier, Genre | 4: Median ROI, Avg Budget, Avg Revenue, Profit Rate | Budget vs revenue per film (scatter, log scales), Median ROI by genre (bar), Top 10 ROI multiple (bar, budget $1M+), Median ROI by tier (bar), Rating by tier (bar) |
+| 3 | Genre and Country | Drama Leads in Volume, but War and History Films Rate Highest | Decade, Language | 4: Most Films Genre, Best Genre, Top Earner Genre, Best Decade | Rating by genre (bar), Average revenue per film (bar), Top 10 production countries (bar), Rating by decade (line) |
+| 4 | Title Explorer | The Films Worth Watching: Best Rated and Biggest Earners | Decade, Genre, Language | 4: Top Grossing, Top Rated, Most Voted, Films Shown | Top 10 films by revenue (bar), Votes vs rating (scatter, 1,000 most-voted films), Highest rated films (table with rating bars) |
+
+Chart notes:
+- Rating charts use a truncated axis (from 5 on the genre and tier bars, from 6 on the decade line). The chart titles say so.
+- Genre rankings run the full page height so all ~20 genres show without scrolling.
+- Median ROI by genre leaves out TV Movie.
+
+## Semantic model
+Four tables in import mode, compatibility level 1606.
+
+| Table | Grain | Notes |
 |---|---|---|
-| `Movies` | 1 row / movie | MovieId, Title, Release Date, Release Year, Decade (+ Decade Sort), Budget, Revenue, Profit, ROI, Has Financials, Runtime, Runtime Band (+sort), Budget Tier (+sort), Vote Average, Vote Count, Rating Band (+sort), Popularity, Language, Primary Genre, Primary Country, Collection Name, Tagline |
-| `Genres` | 1 row / genre | Genre |
-| `MovieGenres` | movie × genre | MovieId, Genre |
-| `_Measures` | measures only | |
+| `Movies` | one row per film | Title, Title and Year, Release Date / Year, Decade (+ sort), Budget, Revenue, Profit, Movie ROI, Big Budget ROI, Has Financials, Runtime (+ band and sort), Budget Tier (+ sort), Vote Average / Count / Points, Rating Band (+ sort), Popularity, Language, Primary Genre, Genre Count, Primary Country, Collection Name, Tagline |
+| `Genres` | one row per genre | Dimension |
+| `MovieGenres` | film x genre | Bridge for the many-to-many genre relationship |
+| `_Measures` | - | 44 measures in display folders, plus a hidden placeholder column |
 
-Relationships: `Genres[Genre] 1→* MovieGenres[Genre]`; `Movies[MovieId] 1→* MovieGenres[MovieId]` with **bi-directional** filter so a Genre slicer filters Movies (many-to-many genres).
+Relationships: `Genres[Genre] 1 -> * MovieGenres[Genre]` and `Movies[Movie ID] 1 -> * MovieGenres[Movie ID]` with a bi-directional filter, so a Genre slicer filters films.
 
-### Measures (`_Measures`)
-- Movies, Rated Movies (votes ≥ 10), Avg Rating, Weighted Rating (IMDb Bayesian, m = 100), % Rated 7+
-- Total Revenue, Total Budget, Avg Revenue per Film, Total Profit, ROI (portfolio), Median ROI, Hit Rate (% revenue > budget)
-- Avg Runtime, Total Votes, Avg Popularity
-- Top Genre, Best Decade (text callouts), Selection Summary (dynamic subtitle)
-- Rating Bar SVG, Star SVG (ImageUrl data-category measures), rank helper
+### Data cleaning
+Done in the shared `Movies` query in `expressions.tmdl`:
+1. `Csv.Document(..., QuoteStyle.Csv)`, 24 columns, UTF-8 (`QuoteStyle.None` broke multi-line overviews).
+2. Dropped: corrupt shifted rows, duplicate ids, adult titles, anything not `Released`, rows without a release date.
+3. Numbers typed with the `en-US` culture, so results do not depend on the machine's locale.
+4. Budget and revenue under $10,000 are treated as missing (`null`). In this dataset, 0 means "unknown", and about 80 % of budgets are missing. Runtime 0 is also treated as missing.
+5. The JSON-like text columns are parsed into Primary Genre, Genre Count, Primary Country and Collection Name. Language codes are mapped to names for the top languages.
+6. Genre bridge and dimension tables are built from the exploded `genres` column.
+7. Heavy unused columns are dropped (homepage, poster path, overview, production companies and similar).
 
-## Pages (FHD 1920×1080)
-1. **The Movie Universe at a Glance** (Executive, landing): 6 KPI cards, movies released per year, top genres, rating distribution, top languages, revenue by decade. Slicers: Decade, Genre, Language.
-2. **Does Money Buy Success?** (Analytical Canvas, filter rail): Budget vs Revenue scatter, ROI by genre, ROI by budget tier, rating by runtime band, top-10 ROI films. Rail slicers: Release Year (between), Genre, Language, Budget Tier.
-3. **Genre & Country Leaderboard** (Comparative Benchmark): weighted rating by genre, avg revenue by genre, Genre × Decade rating heatmap, top production countries. Slicers: Decade, Language.
-4. **Title Explorer** (Analytical, detail): Top 10 by revenue, votes vs rating scatter, ranked title table with SVG rating bars. Slicers: Decade, Genre, Language.
+### Key measures
+- Counts: Movies, Rated Movies (10+ votes), Movies with Financials, Share of All Films, Total Votes.
+- Ratings: Avg Rating, Weighted Rating (IMDb-style Bayesian average, m = 100), All Films Rating, Rating vs All Films, % Rated 7+.
+- Money: Total Revenue / Budget / Profit, Avg Revenue per Film, ROI (a multiple), Median ROI, Hit Rate, and the USD M variants used on axes.
+- Other: Avg Runtime, Runtime vs All Films, Top Genre, Best Rated Decade, Selection Summary.
+- Visual helpers: Rating Stars (text, unused), Rating Bar SVG (used in the title table), and 18 `KPI ... HTML` measures for the cards.
+- `FORMAT` calls in the HTML measures pass the `en-US` locale, so the HTML and CSS stay valid on machines with a comma decimal separator.
+- User-defined DAX functions are not used because the compatibility level (1606) is below 1702, so each card is its own measure.
 
-Report-level: interactions Filter (cross-filter) everywhere; tooltip = default; all charts carry alt text.
+## Known limitations
+- Budget and revenue exist for only about a fifth of the films, so the Money page and every ROI figure cover that subset.
+- 2017 is a partial year, which makes the last point of the films-per-year line look like a drop.
+- Weighted Rating and Avg Rating only count films with enough votes; small groups can still be noisy.
+- The HTML KPI cards depend on the AppSource HTML Content visual, which must be available in Power BI Desktop.
+- The `Source` step in `expressions.tmdl` uses an absolute path to `movies_metadata.csv`; change it after cloning. The CSV is not in the repo (see `README.md`).
+- Not built: Star SVG, rank numbers on the leaderboards, and the release-year range slicer (it did not fit the header).
 
-## Design system summary
-- Theme: custom "MidnightCinema" adapted from `assets/base.json`; page canvas `#BDE8F5`, cards white `#FFFFFF` with 1px `#4988C4` border at 30 %, title band `#0F2854` with `#BDE8F5` text
-- Color semantics: Movies=`#4988C4`, Rating=`#1C4D8D`, Revenue=`#0F2854`, Budget=`#4988C4`, ROI=`#1C4D8D`; sequential gradient `#BDE8F5 → #4988C4 → #0F2854`
-- Accessibility: text `#0F2854` on white (14:1); `#BDE8F5` on `#0F2854` (11:1); `#4988C4` only as graphic/large fill (≥3:1 on white)
+## Build and validation
+- Report files are generated and edited through the Power BI authoring CLIs and `_brief/generator/build-report.js`; the model is edited as TMDL. Desktop re-saves reformat some files (schema versions, TMDL and JSON formatting), which is expected.
+- Validate with `powerbi-report-author validate`, then open the PBIP in Power BI Desktop, refresh, and check each page.
 
-## Model requirements
-- Existing measures: none
-- New measures / columns / tables: see above
-- Relationship/sort: Decade Sort, Runtime Band Sort, Budget Tier Sort, Rating Band Sort
-
-## Canonical design contract
-
-```yaml
-Design Brief:
-  generated_by: powerbi-report-design
-  contract_version: 1
-  mode: greenfield
-  design_identity:
-    tone: "Midnight Cinema: navy title band, pale-cyan canvas, white data cards, Segoe UI"
-    signature: "Full-width navy title band + SVG rating bars/stars and rank-numbered leaderboards on every page"
-  archetype: Executive + Analytical + Comparative
-  color_map:
-    - { measure: "_Measures[Movies]",          color: "#4988C4", tint: "#BDE8F5" }
-    - { measure: "_Measures[Avg Rating]",      color: "#1C4D8D", tint: "#BDE8F5" }
-    - { measure: "_Measures[Weighted Rating]", color: "#1C4D8D", tint: "#BDE8F5" }
-    - { measure: "_Measures[Total Revenue]",   color: "#0F2854", tint: "#BDE8F5" }
-    - { measure: "_Measures[Avg Revenue per Film]", color: "#0F2854", tint: "#BDE8F5" }
-    - { measure: "_Measures[Total Budget]",    color: "#4988C4", tint: "#BDE8F5" }
-    - { measure: "_Measures[Median ROI]",      color: "#1C4D8D", tint: "#BDE8F5" }
-  pages:
-    - name: "Cinema Exploded After 1990: Volume Up, Quality Flat"
-      role: landing
-      archetype: Executive
-      layout_variant: A
-      variant_rationale: "Six headline KPIs plus a year trend and four supporting breakdowns; broad audience needs a 10-second scan."
-      page_background: "#BDE8F5"
-      layout_summary: "Title+filters band, KPI strip, trend + genre row, three-panel breakdown row."
-      layout_contract:
-        canvas: { width: 1920, height: 1080, margin: 32, gutter: 24, snap: 8 }
-        grid:
-          columns: 12
-          rows: 12
-          regions:
-            header:  [1, 1, 9, 2]
-            filters: [9, 1, 13, 2]
-            kpis:    [1, 2, 13, 4]
-            trend:   [1, 4, 8, 8]
-            genres:  [8, 4, 13, 8]
-            rating:  [1, 8, 5, 13]
-            lang:    [5, 8, 9, 13]
-            decade:  [9, 8, 13, 13]
-        placements:
-          - { id: page_title, region: header, kind: textbox, text: "Cinema Exploded After 1990: Volume Up, Quality Flat", purpose: "State the page insight." }
-          - { id: decade_slicer, region: filters, kind: slicer, field_bindings: "Movies[Decade]", slicer_type: dropdown, slot: 1, of: 3 }
-          - { id: genre_slicer, region: filters, kind: slicer, field_bindings: "Genres[Genre]", slicer_type: dropdown, slot: 2, of: 3 }
-          - { id: language_slicer, region: filters, kind: slicer, field_bindings: "Movies[Language]", slicer_type: dropdown, slot: 3, of: 3 }
-          - { id: kpi_movies, region: kpis, kind: cardVisual, purpose: "How many films are in scope?", field_bindings: "_Measures[Movies]", color_strategy: measure_match, insight_basis: "Share of all films", slot: 1, of: 6 }
-          - { id: kpi_rating, region: kpis, kind: cardVisual, purpose: "How well rated are they?", field_bindings: "_Measures[Weighted Rating]", color_strategy: measure_match, insight_basis: "Star SVG + delta vs all films", slot: 2, of: 6 }
-          - { id: kpi_revenue, region: kpis, kind: cardVisual, purpose: "How much money did they earn?", field_bindings: "_Measures[Total Revenue]", color_strategy: measure_match, insight_basis: "Avg revenue per film", slot: 3, of: 6 }
-          - { id: kpi_budget, region: kpis, kind: cardVisual, purpose: "How much was invested?", field_bindings: "_Measures[Total Budget]", color_strategy: measure_match, insight_basis: "Median ROI", slot: 4, of: 6 }
-          - { id: kpi_runtime, region: kpis, kind: cardVisual, purpose: "How long are films?", field_bindings: "_Measures[Avg Runtime]", color_strategy: none, insight_basis: "Minutes; vs all films", slot: 5, of: 6 }
-          - { id: kpi_hit, region: kpis, kind: cardVisual, purpose: "How many films turn a profit?", field_bindings: "_Measures[Hit Rate]", color_strategy: none, insight_basis: "Share of films with known financials", slot: 6, of: 6 }
-          - { id: films_per_year, region: trend, kind: lineChart, purpose: "How has film output grown over time?", field_bindings: { Category: "Movies[Release Year]", Y: "_Measures[Movies]" }, color_strategy: measure_match }
-          - { id: top_genres, region: genres, kind: barChart, purpose: "Which genres have the most films?", field_bindings: { Category: "Genres[Genre]", Y: "_Measures[Movies]" }, sort_policy: value_desc, color_strategy: gradient }
-          - { id: rating_dist, region: rating, kind: columnChart, purpose: "How are ratings distributed?", field_bindings: { Category: "Movies[Rating Band]", Y: "_Measures[Movies]" }, sort_policy: natural_order, color_strategy: measure_match }
-          - { id: top_languages, region: lang, kind: barChart, purpose: "Which original languages dominate?", field_bindings: { Category: "Movies[Language]", Y: "_Measures[Movies]" }, sort_policy: value_desc, color_strategy: gradient }
-          - { id: revenue_decade, region: decade, kind: columnChart, purpose: "Which decades earned the most?", field_bindings: { Category: "Movies[Decade]", Y: "_Measures[Total Revenue]" }, sort_policy: natural_order, color_strategy: measure_match }
-        space_audit:
-          content_cell_count: 132
-          placed_cell_count: 132
-          empty_cell_pct: 0
-          unplaced_regions: []
-          largest_region: { name: trend, pct_of_content: 21 }
-          balance_rationale: "KPI strip is 2 rows with context; five analysis panels are 20-28 cells each so nothing starves and no dead band remains."
-
-    - name: "Big Budgets Raise Revenue, Not Return"
-      role: detail
-      archetype: Analytical
-      layout_variant: B
-      variant_rationale: "Four filter dimensions (year, genre, language, budget tier) justify a left filter rail; a scatter is the natural hero for budget vs revenue."
-      page_background: "#BDE8F5"
-      layout_summary: "Title band, left slicer rail, scatter hero with ROI bars, bottom row of three profitability views."
-      layout_contract:
-        canvas: { width: 1920, height: 1080, margin: 32, gutter: 24, snap: 8 }
-        grid:
-          columns: 12
-          rows: 12
-          regions:
-            header:  [1, 1, 13, 2]
-            rail:    [1, 2, 3, 13]
-            hero:    [3, 2, 9, 8]
-            roi_genre: [9, 2, 13, 8]
-            tier:    [3, 8, 7, 13]
-            runtime: [7, 8, 10, 13]
-            toproi: [10, 8, 13, 13]
-        placements:
-          - { id: page_title, region: header, kind: textbox, text: "Big Budgets Raise Revenue, Not Return", purpose: "State the page insight." }
-          - { id: year_slicer, region: rail, kind: slicer, field_bindings: "Movies[Release Year]", slicer_type: between, slot: 1, of: 4, insight_basis: "Arbitrary year-range exploration on a numeric year." }
-          - { id: genre_slicer, region: rail, kind: slicer, field_bindings: "Genres[Genre]", slicer_type: list, slot: 2, of: 4 }
-          - { id: language_slicer, region: rail, kind: slicer, field_bindings: "Movies[Language]", slicer_type: dropdown, slot: 3, of: 4 }
-          - { id: tier_slicer, region: rail, kind: slicer, field_bindings: "Movies[Budget Tier]", slicer_type: list, slot: 4, of: 4 }
-          - { id: budget_vs_revenue, region: hero, kind: scatterChart, purpose: "Does spending more earn more?", field_bindings: { X: "_Measures[Total Budget]", Y: "_Measures[Total Revenue]", Details: "Movies[Title]", Size: "_Measures[Total Votes]" }, color_strategy: measure_match }
-          - { id: roi_by_genre, region: roi_genre, kind: barChart, purpose: "Which genres return the most per dollar?", field_bindings: { Category: "Genres[Genre]", Y: "_Measures[Median ROI]" }, sort_policy: value_desc, color_strategy: gradient, comparison_basis: "Median ROI, films with known budget & revenue" }
-          - { id: roi_by_tier, region: tier, kind: columnChart, purpose: "Does return fall as budgets grow?", field_bindings: { Category: "Movies[Budget Tier]", Y: "_Measures[Median ROI]" }, sort_policy: natural_order, color_strategy: measure_match }
-          - { id: rating_by_runtime, region: runtime, kind: columnChart, purpose: "Do longer films score higher?", field_bindings: { Category: "Movies[Runtime Band]", Y: "_Measures[Avg Rating]" }, sort_policy: natural_order, color_strategy: measure_match }
-          - { id: top_roi_films, region: toproi, kind: barChart, purpose: "Which films beat the odds?", field_bindings: { Category: "Movies[Title]", Y: "_Measures[ROI]" }, sort_policy: value_desc, color_strategy: gradient, comparison_basis: "Top 10 ROI, budget ≥ $1M" }
-        space_audit:
-          content_cell_count: 110
-          placed_cell_count: 110
-          empty_cell_pct: 0
-          unplaced_regions: []
-          largest_region: { name: hero, pct_of_content: 33 }
-          balance_rationale: "Scatter hero (36 cells) answers the page question; four supporting panels of 15-24 cells slice it by genre, tier, runtime and title. Filter rail (22 cells) excluded from content."
-
-    - name: "Drama Leads in Volume, Documentary and Animation in Rating"
-      role: detail
-      archetype: Comparative
-      layout_variant: A
-      variant_rationale: "One entity dimension (genre) ranked on two measures plus a genre×decade matrix; rank-comparison is the page job."
-      page_background: "#BDE8F5"
-      layout_summary: "Two ranked genre bars over a heatmap matrix and a country ranking."
-      layout_contract:
-        canvas: { width: 1920, height: 1080, margin: 32, gutter: 24, snap: 8 }
-        grid:
-          columns: 12
-          rows: 12
-          regions:
-            header:  [1, 1, 9, 2]
-            filters: [9, 1, 13, 2]
-            rank_rating: [1, 2, 7, 8]
-            rank_revenue: [7, 2, 13, 8]
-            heatmap: [1, 8, 9, 13]
-            countries: [9, 8, 13, 13]
-        placements:
-          - { id: page_title, region: header, kind: textbox, text: "Drama Leads in Volume, Documentary and Animation in Rating", purpose: "State the page insight." }
-          - { id: decade_slicer, region: filters, kind: slicer, field_bindings: "Movies[Decade]", slicer_type: dropdown, slot: 1, of: 2 }
-          - { id: language_slicer, region: filters, kind: slicer, field_bindings: "Movies[Language]", slicer_type: dropdown, slot: 2, of: 2 }
-          - { id: genre_rating_rank, region: rank_rating, kind: barChart, purpose: "Which genres are best rated?", field_bindings: { Category: "Genres[Genre]", Y: "_Measures[Weighted Rating]" }, sort_policy: value_desc, color_strategy: gradient, comparison_basis: "Weighted rating vs all-films average" }
-          - { id: genre_revenue_rank, region: rank_revenue, kind: barChart, purpose: "Which genres earn the most per film?", field_bindings: { Category: "Genres[Genre]", Y: "_Measures[Avg Revenue per Film]" }, sort_policy: value_desc, color_strategy: gradient }
-          - { id: genre_decade_heat, region: heatmap, kind: pivotTable, purpose: "How has each genre's quality shifted by decade?", field_bindings: { Rows: "Genres[Genre]", Columns: "Movies[Decade]", Values: "_Measures[Weighted Rating]" }, color_strategy: gradient }
-          - { id: top_countries, region: countries, kind: barChart, purpose: "Which countries produce the most films?", field_bindings: { Category: "Movies[Primary Country]", Y: "_Measures[Movies]" }, sort_policy: value_desc, color_strategy: gradient }
-        space_audit:
-          content_cell_count: 132
-          placed_cell_count: 132
-          empty_cell_pct: 0
-          unplaced_regions: []
-          largest_region: { name: heatmap, pct_of_content: 30 }
-          balance_rationale: "Two equal ranking panels (36 cells each), a wide heatmap needing 8 columns for ~9 decades, and a compact country ranking."
-
-    - name: "The Films Worth Watching: Best Rated and Biggest Earners"
-      role: detail
-      archetype: Analytical
-      layout_variant: A
-      variant_rationale: "Record-level exploration: two overview visuals above a ranked detail table."
-      page_background: "#BDE8F5"
-      layout_summary: "Top-10 revenue bars beside a votes-vs-rating scatter, ranked title table below."
-      layout_contract:
-        canvas: { width: 1920, height: 1080, margin: 32, gutter: 24, snap: 8 }
-        grid:
-          columns: 12
-          rows: 12
-          regions:
-            header:  [1, 1, 9, 2]
-            filters: [9, 1, 13, 2]
-            top10:   [1, 2, 6, 8]
-            votes_rating: [6, 2, 13, 8]
-            titles:  [1, 8, 13, 13]
-        placements:
-          - { id: page_title, region: header, kind: textbox, text: "The Films Worth Watching: Best Rated and Biggest Earners", purpose: "State the page insight." }
-          - { id: decade_slicer, region: filters, kind: slicer, field_bindings: "Movies[Decade]", slicer_type: dropdown, slot: 1, of: 3 }
-          - { id: genre_slicer, region: filters, kind: slicer, field_bindings: "Genres[Genre]", slicer_type: dropdown, slot: 2, of: 3 }
-          - { id: language_slicer, region: filters, kind: slicer, field_bindings: "Movies[Language]", slicer_type: dropdown, slot: 3, of: 3 }
-          - { id: top10_revenue, region: top10, kind: barChart, purpose: "Which 10 films earned the most?", field_bindings: { Category: "Movies[Title]", Y: "_Measures[Total Revenue]" }, sort_policy: value_desc, color_strategy: measure_match }
-          - { id: votes_vs_rating, region: votes_rating, kind: scatterChart, purpose: "Are widely voted films also highly rated?", field_bindings: { X: "Movies[Vote Count]", Y: "Movies[Vote Average]", Details: "Movies[Title]" }, color_strategy: measure_match }
-          - { id: title_table, region: titles, kind: tableEx, purpose: "Which individual films rank best?", field_bindings: ["Movies[Title]", "Movies[Release Year]", "Movies[Primary Genre]", "_Measures[Rating Bar SVG]", "_Measures[Weighted Rating]", "Movies[Vote Count]", "Movies[Revenue]"], sort_policy: value_desc }
-        space_audit:
-          content_cell_count: 132
-          placed_cell_count: 132
-          empty_cell_pct: 0
-          unplaced_regions: []
-          largest_region: { name: titles, pct_of_content: 45 }
-          balance_rationale: "Ranked table is the deliverable of the page (5 rows tall for ~10 visible rows); two overview visuals above give context. Three data visuals, largest 45 % < 55 %."
-  interaction_pattern:
-    drill_targets: []
-    cross_filter_rules: "Filter for all chart-to-chart pairs; slicers are page-local"
-  accessibility:
-    alt_text_strategy: headline+trend
-    contrast_notes: "#4988C4 only as graphic fill (3.4:1 on white); never as text. #BDE8F5 text only on #0F2854."
-  theme:
-    base: "assets/base.json adapted to Midnight Cinema (existing Fluent2 base theme retained as baseTheme)"
-    user_overrides: "Palette fixed by user: 0F2854, 1C4D8D, 4988C4, BDE8F5"
-```
-
-## Implementation notes
-- Model changes: rewrite `movies_metadata.tmdl` (rename → `Movies`) with corrected M; add `Genres`, `MovieGenres`, `_Measures`, relationships; validate M/DAX by opening in Desktop and refreshing
-- PBIR/report authoring: through `powerbi-report-authoring`; generator script; theme registered in `report.json`
-- Validation: `powerbi-report-author validate`, then Desktop `open`/`reload` + `screenshot-all`
-- Publishing boundary: none unless requested
-- Risks: M cannot be tested until Desktop refresh (30 s on 34 MB CSV); scatter with ~5k points is dense (Top-N or transparency); Genre slicer relies on bi-directional bridge; SVG image measures depend on Desktop version support in `tableEx`
+## Change history
+The entries below are the dated log of changes and are kept as history. Later entries supersede earlier ones. The original Midnight Cinema brief (navy `#0F2854` / `#1C4D8D` / `#4988C4` / `#BDE8F5` palette, light canvas, navy title band, `_Measures` table, `Movies` partition doing the cleaning) was replaced by the Neon HUD design described above.
 
 ## Build notes (as built, 2026-09-19)
 - Page titles were rewritten to match the data: (1) "Film Output Tripled Since the 1980s While Ratings Slipped", (2) "Bigger Budgets Buy Revenue, Not Better Ratings", (3) "Drama Leads in Volume, but War and History Films Rate Highest", (4) "The Films Worth Watching: Best Rated and Biggest Earners".
@@ -305,3 +133,8 @@ Design Brief:
 
 ## Accent color: signal green (2026-09-19)
 - Amber replaced by signal green `#4ADE80` (ROI charts, Median ROI / Profitable films / Films in selection cards). "Worse than average" arrows and the theme's `bad` color are orange `#FB923C`; theme `neutral` is sky `#60A5FA`.
+
+## Spec refresh and Desktop re-save (2026-09-20)
+- This spec was rewritten to describe the current Neon HUD report; the original Midnight Cinema design contract was removed.
+- Power BI Desktop re-saved the project: newer visual schema version, reformatted TMDL and JSON, `filterPaneHiddenInEditMode` set in `report.json`, and the tooltip field order changed on the budget-vs-revenue scatter.
+- A `README.md` was added and the GitHub repo was made public.
