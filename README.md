@@ -71,6 +71,10 @@ Movie Analysis With AI.Report/         Report (PBIR): pages, visuals, "Neon HUD"
 _brief/                                Report spec and the script that generated the report
 ```
 
+## License
+
+The code, model and report in this repository are released under the [MIT License](LICENSE). The film data is not covered by it: it comes from TMDB via Kaggle and is subject to their terms.
+
 ## Credits
 
 Film data comes from [TMDB](https://www.themoviedb.org/) via Kaggle. This product uses the TMDB data but is not endorsed or certified by TMDB.
