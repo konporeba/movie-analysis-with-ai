@@ -4,6 +4,8 @@ A four-page, dark "Neon HUD" Power BI dashboard about the history of cinema (187
 
 The report was built with Claude Code and the Power BI authoring tools.
 
+![Overview page of the Movie Analysis With AI dashboard](docs/screenshots/01-overview.png)
+
 ## What it answers
 
 - How much cinema is made, and when?
@@ -19,6 +21,17 @@ The report was built with Claude Code and the Power BI authoring tools.
 | **Money and Success** | Budget vs revenue scatter, median ROI by genre and budget tier, rating by budget tier, top ROI films. Slicers: Decade, Language, Budget tier, Genre. |
 | **Genre and Country** | Weighted rating and average revenue by genre, rating by decade, top production countries. Slicers: Decade, Language. |
 | **Title Explorer** | Top titles by revenue, votes vs rating, and a ranked title table with rating bars. Slicers: Decade, Genre, Language. |
+
+The Overview page is shown at the top. The other three pages:
+
+### Money and Success
+![Money and Success: budget vs revenue scatter, median ROI by genre and tier, top ROI films](docs/screenshots/02-money-and-success.png)
+
+### Genre and Country
+![Genre and Country: rating and average revenue by genre, top production countries, rating by decade](docs/screenshots/03-genre-and-country.png)
+
+### Title Explorer
+![Title Explorer: top films by revenue, votes vs rating scatter and a ranked table of the highest rated films](docs/screenshots/04-title-explorer.png)
 
 The KPI cards are HTML/SVG strings built with DAX measures (the `KPI … HTML` and `Rating Bar SVG` measures). Every chart, card and table has alt text.
 
