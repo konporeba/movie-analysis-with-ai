@@ -149,6 +149,9 @@ for (const P of PAGES) {
     const v = load(page, sid);
     v.position = Object.assign(v.position, { x: 24, y: slTop - PY + i * (SL_H + SL_GAP), z: Z + 10 + i, width: PW - 48, height: SL_H, tabOrder: Z + 10 + i });
     v.parentGroupName = gid;
+    // same-field slicers share a sync group, so a selection carries over to every page
+    const field = v.visual.query.queryState.Values.projections[0].field.Column.Property;
+    v.visual.syncGroup = { groupName: field, fieldChanges: true, filterChanges: true };
     const vco = v.visual.visualContainerObjects || (v.visual.visualContainerObjects = {});
     vco.background = [{ properties: { show: B(false) } }];
     vco.border = [{ properties: { show: B(false) } }];

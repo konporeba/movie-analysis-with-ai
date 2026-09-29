@@ -210,6 +210,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "Genre",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   },
   "parentGroupName": "548625d6d49d0556380a"

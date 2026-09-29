@@ -210,6 +210,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "Budget Tier",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   },
   "parentGroupName": "1037310369607f92d93e"

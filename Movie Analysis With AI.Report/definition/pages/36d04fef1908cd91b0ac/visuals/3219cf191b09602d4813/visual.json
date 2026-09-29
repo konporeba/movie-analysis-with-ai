@@ -215,6 +215,11 @@
           }
         }
       ]
+    },
+    "syncGroup": {
+      "groupName": "Decade",
+      "fieldChanges": true,
+      "filterChanges": true
     }
   },
   "parentGroupName": "fda4d8380a98f431b379"
