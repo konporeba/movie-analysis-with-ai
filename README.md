@@ -17,23 +17,27 @@ The report was built with Claude Code and the Power BI authoring tools.
 
 | Page | Focus |
 |---|---|
-| **Overview** | Headline KPI cards, films released per year, top genres, rating distribution, top languages, revenue by decade. Slicers: Decade, Genre, Language. |
-| **Money and Success** | Budget vs revenue scatter, median ROI by genre and budget tier, rating by budget tier, top ROI films. Slicers: Decade, Language, Budget tier, Genre. |
-| **Genre and Country** | Weighted rating and average revenue by genre, rating by decade, top production countries. Slicers: Decade, Language. |
-| **Title Explorer** | Top titles by revenue, votes vs rating, and a ranked title table with rating bars. Slicers: Decade, Genre, Language. |
+| **Overview** | Six KPI cards, films per year vs weighted rating (5-year averages), films per genre with rating, rating distribution, top languages, revenue and hit rate by decade. Filters: Decade, Genre, Language. |
+| **Money and Success** | Budget vs revenue scatter with a break-even line, median ROI by genre and budget tier, rating by budget tier, ranked top 10 ROI films. Filters: Decade, Language, Budget tier, Genre. |
+| **Genre and Country** | Rating by genre vs all films, genre landscape bubble chart (volume vs rating vs revenue), top production countries, rating and output by decade. Filters: Decade, Language. |
+| **Title Explorer** | Top 10 genres by revenue, votes vs rating with labelled standouts, and a ranked title table with rating bars. Filters: Decade, Genre, Language. |
 
 The Overview page is shown at the top. The other three pages:
 
 ### Money and Success
-![Money and Success: budget vs revenue scatter, median ROI by genre and tier, top ROI films](docs/screenshots/02-money-and-success.png)
+![Money and Success: budget vs revenue scatter coloured by profit or loss, median ROI by genre and budget tier, ranked top 10 ROI films](docs/screenshots/02-money-and-success.png)
 
 ### Genre and Country
-![Genre and Country: rating and average revenue by genre, top production countries, rating by decade](docs/screenshots/03-genre-and-country.png)
+![Genre and Country: rating by genre vs all films, genre landscape bubble chart, top production countries, rating and output by decade](docs/screenshots/03-genre-and-country.png)
 
 ### Title Explorer
-![Title Explorer: top films by revenue, votes vs rating scatter and a ranked table of the highest rated films](docs/screenshots/04-title-explorer.png)
+![Title Explorer: top genres by revenue, votes vs rating scatter and a ranked table of the highest rated films](docs/screenshots/04-title-explorer.png)
 
-The KPI cards are HTML/SVG strings built with DAX measures (the `KPI … HTML` and `Rating Bar SVG` measures). Every chart, card and table has alt text.
+The KPI cards are HTML/SVG strings built with DAX measures (the `KPI … HTML` measures): each shows the headline value, one sentence that says what it means (for example "▲ 4.4x films per year vs 1980s") and two supporting facts. Most charts are [Deneb](https://deneb-viz.github.io/) (Vega-Lite) visuals: films per year vs rating with 5-year averages, a genre volume-vs-rating bubble chart, a budget-vs-revenue scatter with a break-even line, diverging rating bars and lollipop rankings. Every chart, card and table has alt text.
+
+Filters live in a slide-in panel: the **☰ FILTERS** button at the top right opens it (Ctrl+click in Power BI Desktop edit mode), and the chips next to it show which filters are active.
+
+The report uses two AppSource custom visuals, **HTML Content** and **Deneb**. Power BI Desktop downloads them when the report opens.
 
 ## Semantic model
 

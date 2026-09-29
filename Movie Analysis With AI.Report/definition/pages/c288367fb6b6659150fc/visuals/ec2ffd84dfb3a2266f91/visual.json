@@ -3,17 +3,17 @@
   "name": "ec2ffd84dfb3a2266f91",
   "position": {
     "x": 32,
-    "y": 280,
+    "y": 380,
     "z": 12000,
-    "height": 416,
+    "height": 400,
     "width": 760,
     "tabOrder": 12000
   },
   "visual": {
-    "visualType": "scatterChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,30 +28,8 @@
               },
               "queryRef": "Movies.Title and Year",
               "nativeQueryRef": "Title and Year",
-              "active": true
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "Total Votes"
-                }
-              },
-              "queryRef": "_Measures.Total Votes",
-              "nativeQueryRef": "Total Votes"
-            }
-          ]
-        },
-        "X": {
-          "projections": [
+              "displayName": "Film"
+            },
             {
               "field": {
                 "Measure": {
@@ -65,12 +43,8 @@
               },
               "queryRef": "_Measures.Budget (USD M)",
               "nativeQueryRef": "Budget (USD M)",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Budget"
+            },
             {
               "field": {
                 "Measure": {
@@ -83,213 +57,146 @@
                 }
               },
               "queryRef": "_Measures.Revenue (USD M)",
-              "nativeQueryRef": "Revenue (USD M)"
+              "nativeQueryRef": "Revenue (USD M)",
+              "displayName": "Revenue"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Votes"
+                }
+              },
+              "queryRef": "_Measures.Total Votes",
+              "nativeQueryRef": "Total Votes",
+              "displayName": "Votes"
             }
           ]
         }
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#22D3EE'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "bubbles": [
-        {
-          "properties": {
-            "bubbleSize": {
+            "provider": {
               "expr": {
                 "Literal": {
-                  "Value": "1L"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "'vegaLite'"
                 }
               }
             },
-            "logAxisScale": {
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"layer\":[{\"data\":{\"values\":[{\"b\":0.01,\"r\":0.01},{\"b\":1000,\"r\":1000}]},\"mark\":{\"type\":\"line\",\"strokeDash\":[6,4],\"color\":\"#9DB4D8\",\"strokeWidth\":1.5,\"opacity\":0.8},\"encoding\":{\"x\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,1000]},\"axis\":{\"title\":\"Budget (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"b\"},\"y\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,5000]},\"axis\":{\"title\":\"Revenue (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"r\"}}},{\"data\":{\"values\":[{\"b\":0.01,\"r\":0.1},{\"b\":500,\"r\":5000}]},\"mark\":{\"type\":\"line\",\"strokeDash\":[2,4],\"color\":\"#4ADE80\",\"strokeWidth\":1,\"opacity\":0.6},\"encoding\":{\"x\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,1000]},\"axis\":{\"title\":\"Budget (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"b\"},\"y\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,5000]},\"axis\":{\"title\":\"Revenue (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"r\"}}},{\"data\":{\"values\":[{\"b\":700,\"r\":480,\"t\":\"break-even\"},{\"b\":330,\"r\":5000,\"t\":\"10x\"}]},\"mark\":{\"type\":\"text\",\"align\":\"right\",\"fontSize\":11,\"color\":\"#9DB4D8\",\"dx\":-4},\"encoding\":{\"x\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,1000]},\"axis\":{\"title\":\"Budget (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"b\"},\"y\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,5000]},\"axis\":{\"title\":\"Revenue (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"r\"},\"text\":{\"field\":\"t\"}}},{\"transform\":[{\"filter\":\"datum.Budget > 0 && datum.Revenue > 0\"},{\"calculate\":\"datum.Revenue / datum.Budget\",\"as\":\"Multiple\"},{\"calculate\":\"datum.Multiple >= 1 ? ''Profitable'' : ''Loss''\",\"as\":\"Result\"}],\"mark\":{\"type\":\"circle\",\"opacity\":0.5},\"encoding\":{\"x\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,1000]},\"axis\":{\"title\":\"Budget (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"Budget\"},\"y\":{\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"domain\":[0.01,5000]},\"axis\":{\"title\":\"Revenue (log)\",\"values\":[0.01,0.1,1,10,100,1000],\"labelExpr\":\"datum.value >= 1000 ? ''$'' + format(datum.value / 1000, '',.0f'') + ''bn'' : datum.value >= 1 ? ''$'' + format(datum.value, '',.0f'') + ''M'' : ''$'' + format(datum.value * 1000, '',.0f'') + ''K''\"},\"field\":\"Revenue\"},\"color\":{\"field\":\"Result\",\"type\":\"nominal\",\"scale\":{\"domain\":[\"Profitable\",\"Loss\"],\"range\":[\"#4ADE80\",\"#FB923C\"]},\"legend\":{\"orient\":\"top-left\",\"direction\":\"vertical\",\"fillColor\":\"rgba(11,23,48,0.85)\",\"padding\":6,\"offset\":14}},\"size\":{\"field\":\"Votes\",\"type\":\"quantitative\",\"scale\":{\"type\":\"sqrt\",\"range\":[6,260]},\"legend\":null},\"tooltip\":[{\"field\":\"Film\",\"title\":\"Film\",\"type\":\"nominal\"},{\"field\":\"Budget\",\"title\":\"Budget ($M)\",\"type\":\"quantitative\",\"format\":\",.1f\"},{\"field\":\"Revenue\",\"title\":\"Revenue ($M)\",\"type\":\"quantitative\",\"format\":\",.1f\"},{\"field\":\"Multiple\",\"title\":\"Revenue / budget\",\"type\":\"quantitative\",\"format\":\".1f\"},{\"field\":\"Votes\",\"title\":\"Votes\",\"type\":\"quantitative\",\"format\":\",.0f\"}]}}]}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#9DB4D8'"
-                    }
-                  }
-                }
-              }
-            },
-            "showAxisTitle": {
+            "enableContextMenu": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "titleText": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Budget'"
-                }
-              }
-            },
-            "titleColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
-                }
-              }
-            },
-            "titleFontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "gridlineShow": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
                   "Value": "false"
                 }
               }
             },
-            "gridlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1A2E55'"
-                    }
-                  }
+            "enableHighlight": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "labelDisplayUnits": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "300D"
                 }
               }
             },
-            "logAxisScale": {
+            "viewportWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "730D"
                 }
               }
             },
-            "fontSize": {
+            "supportFieldConfiguration": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "'{\"Film\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Budget\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Revenue\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Votes\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#9DB4D8'"
-                    }
-                  }
-                }
-              }
-            },
-            "showAxisTitle": {
+            "denebMetaVersion": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "'2'"
                 }
               }
             },
-            "titleText": {
+            "consolidateFieldParameters": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue'"
+                  "Value": "false"
                 }
               }
-            },
-            "titleColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
-                }
-              }
-            },
-            "titleFontSize": {
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "gridlineShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1A2E55'"
-                    }
-                  }
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -311,7 +218,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Budget vs revenue per film (log scales)'"
+                  "Value": "'Budget vs revenue per film'"
                 }
               }
             },
@@ -363,7 +270,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Scatter chart of production budget against revenue for each film with known financials, log scales'"
+                  "Value": "'Scatter of budget against revenue per film on log scales, coloured by profit or loss, with a break-even line'"
                 }
               }
             }
@@ -376,7 +283,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Log scales · above the dashed line a film earned back its budget · green = profitable, orange = loss · size = votes'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -484,7 +423,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [

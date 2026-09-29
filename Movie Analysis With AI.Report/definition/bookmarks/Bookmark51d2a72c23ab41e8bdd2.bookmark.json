@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Genre and Country · Show filters",
+  "name": "Bookmark51d2a72c23ab41e8bdd2",
+  "options": {
+    "applyOnlyToTargetVisuals": true,
+    "targetVisualNames": [
+      "bee1939a32fd3ea0cad8"
+    ],
+    "suppressActiveSection": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.0",
+    "activeSection": "4215b814ac44384df309",
+    "sections": {
+      "4215b814ac44384df309": {
+        "visualContainers": {},
+        "visualContainerGroups": {
+          "bee1939a32fd3ea0cad8": {
+            "isHidden": false
+          }
+        }
+      }
+    }
+  }
+}

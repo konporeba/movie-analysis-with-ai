@@ -1,39 +1,35 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "d7c28c852d776000e3f8",
   "position": {
     "x": 32,
-    "y": 280,
+    "y": 380,
     "z": 11000,
-    "height": 416,
+    "height": 360,
     "width": 760,
     "tabOrder": 11000
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Movies"
+                      "Entity": "Genres"
                     }
                   },
-                  "Property": "Title and Year"
+                  "Property": "Genre"
                 }
               },
-              "queryRef": "Movies.Title and Year",
-              "nativeQueryRef": "Title and Year",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "queryRef": "Genres.Genre",
+              "nativeQueryRef": "Genre",
+              "displayName": "Genre"
+            },
             {
               "field": {
                 "Measure": {
@@ -46,125 +42,161 @@
                 }
               },
               "queryRef": "_Measures.Total Revenue",
-              "nativeQueryRef": "Total Revenue"
+              "nativeQueryRef": "Total Revenue",
+              "displayName": "Revenue"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Avg Revenue per Film"
+                }
+              },
+              "queryRef": "_Measures.Avg Revenue per Film",
+              "nativeQueryRef": "Avg Revenue per Film",
+              "displayName": "PerFilm"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Movies"
+                }
+              },
+              "queryRef": "_Measures.Movies",
+              "nativeQueryRef": "Movies",
+              "displayName": "Films"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "Total Revenue"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#3B82F6'"
-                    }
-                  }
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
                 }
               }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"transform\":[{\"window\":[{\"op\":\"row_number\",\"as\":\"_r\"}],\"sort\":[{\"field\":\"Revenue\",\"order\":\"descending\"}]},{\"filter\":\"datum._r <= 10\"},{\"joinaggregate\":[{\"op\":\"max\",\"field\":\"Revenue\",\"as\":\"_max\"}]},{\"calculate\":\"datum.Revenue / datum._max\",\"as\":\"_p\"},{\"calculate\":\"(datum.Revenue >= 1e9 ? ''$'' + format(datum.Revenue / 1e9, '',.1f'') + ''bn'' : datum.Revenue >= 1e6 ? ''$'' + format(datum.Revenue / 1e6, '',.0f'') + ''M'' : ''$'' + format(datum.Revenue / 1e3, '',.0f'') + ''K'') + ''  ·  '' + (datum.PerFilm >= 1e9 ? ''$'' + format(datum.PerFilm / 1e9, '',.1f'') + ''bn'' : datum.PerFilm >= 1e6 ? ''$'' + format(datum.PerFilm / 1e6, '',.0f'') + ''M'' : ''$'' + format(datum.PerFilm / 1e3, '',.0f'') + ''K'') + '' per film''\",\"as\":\"_lbl\"}],\"layer\":[{\"mark\":{\"type\":\"bar\",\"height\":{\"band\":0.62},\"cornerRadiusEnd\":4,\"color\":{\"gradient\":\"linear\",\"x1\":0,\"y1\":0,\"x2\":1,\"y2\":0,\"stops\":[{\"offset\":0,\"color\":\"#1D4ED8\"},{\"offset\":1,\"color\":\"#3B82F6\"}]}},\"encoding\":{\"y\":{\"field\":\"Genre\",\"type\":\"nominal\",\"sort\":{\"field\":\"Revenue\",\"order\":\"descending\"},\"axis\":{\"title\":null,\"grid\":false,\"labelColor\":\"#EAF2FF\",\"labelFontSize\":13,\"labelLimit\":150}},\"tooltip\":[{\"field\":\"Genre\",\"title\":\"Genre\",\"type\":\"nominal\"},{\"field\":\"Revenue\",\"title\":\"Total revenue\",\"type\":\"quantitative\",\"format\":\"$,.0f\"},{\"field\":\"PerFilm\",\"title\":\"Avg revenue per film\",\"type\":\"quantitative\",\"format\":\"$,.0f\"},{\"field\":\"Films\",\"title\":\"Films\",\"type\":\"quantitative\",\"format\":\",.0f\"}],\"x\":{\"field\":\"_p\",\"type\":\"quantitative\",\"axis\":null,\"scale\":{\"domain\":[0,1.3]}}}},{\"mark\":{\"type\":\"text\",\"align\":\"left\",\"dx\":6,\"color\":\"#EAF2FF\",\"fontSize\":12},\"encoding\":{\"y\":{\"field\":\"Genre\",\"type\":\"nominal\",\"sort\":{\"field\":\"Revenue\",\"order\":\"descending\"},\"axis\":{\"title\":null,\"grid\":false,\"labelColor\":\"#EAF2FF\",\"labelFontSize\":13,\"labelLimit\":150}},\"tooltip\":[{\"field\":\"Genre\",\"title\":\"Genre\",\"type\":\"nominal\"},{\"field\":\"Revenue\",\"title\":\"Total revenue\",\"type\":\"quantitative\",\"format\":\"$,.0f\"},{\"field\":\"PerFilm\",\"title\":\"Avg revenue per film\",\"type\":\"quantitative\",\"format\":\"$,.0f\"},{\"field\":\"Films\",\"title\":\"Films\",\"type\":\"quantitative\",\"format\":\",.0f\"}],\"x\":{\"field\":\"_p\",\"type\":\"quantitative\"},\"text\":{\"field\":\"_lbl\"}}}]}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "fontSize": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "false"
                 }
               }
             },
-            "fontFamily": {
+            "enableHighlight": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI'"
+                  "Value": "false"
                 }
               }
             },
-            "labelDisplayUnits": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "fontSize": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "260D"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "730D"
                 }
               }
             },
-            "innerPadding": {
+            "supportFieldConfiguration": {
               "expr": {
                 "Literal": {
-                  "Value": "50L"
+                  "Value": "'{\"Genre\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Revenue\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"PerFilm\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Films\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
                 }
               }
             },
-            "maxMarginFactor": {
+            "denebMetaVersion": {
               "expr": {
                 "Literal": {
-                  "Value": "50L"
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -186,7 +218,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Top 10 films by revenue'"
+                  "Value": "'Top 10 genres by revenue'"
                 }
               }
             },
@@ -238,7 +270,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bar chart of the ten highest-grossing films in the selection'"
+                  "Value": "'Ten genres with the highest total revenue with average revenue per film'"
                 }
               }
             }
@@ -251,7 +283,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Total revenue · label: average revenue per film (a film can have several genres)'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -359,112 +423,7 @@
           }
         }
       ]
-    }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "Filterddfcecb3d926c3c282810e91",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Movies"
-              }
-            },
-            "Property": "Title and Year"
-          }
-        },
-        "type": "TopN",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "subquery",
-              "Expression": {
-                "Subquery": {
-                  "Query": {
-                    "Version": 2,
-                    "From": [
-                      {
-                        "Name": "m",
-                        "Entity": "Movies",
-                        "Type": 0
-                      }
-                    ],
-                    "Select": [
-                      {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Source": "m"
-                            }
-                          },
-                          "Property": "Title and Year"
-                        },
-                        "Name": "field"
-                      }
-                    ],
-                    "OrderBy": [
-                      {
-                        "Direction": 2,
-                        "Expression": {
-                          "Aggregation": {
-                            "Expression": {
-                              "Column": {
-                                "Expression": {
-                                  "SourceRef": {
-                                    "Source": "m"
-                                  }
-                                },
-                                "Property": "Revenue"
-                              }
-                            },
-                            "Function": 0
-                          }
-                        }
-                      }
-                    ],
-                    "Top": 10
-                  }
-                }
-              },
-              "Type": 2
-            },
-            {
-              "Name": "t",
-              "Entity": "Movies",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "t"
-                          }
-                        },
-                        "Property": "Title and Year"
-                      }
-                    }
-                  ],
-                  "Table": {
-                    "SourceRef": {
-                      "Source": "subquery"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      }
-    ]
+    },
+    "drillFilterOtherVisuals": true
   }
 }

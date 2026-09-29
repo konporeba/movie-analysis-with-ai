@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "20a9e784d02ea52143be",
   "position": {
     "x": 1280,
-    "y": 280,
+    "y": 380,
     "z": 16000,
-    "height": 768,
+    "height": 668,
     "width": 608,
     "tabOrder": 16000
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,12 +28,8 @@
               },
               "queryRef": "Movies.Title and Year",
               "nativeQueryRef": "Title and Year",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Film"
+            },
             {
               "field": {
                 "Measure": {
@@ -46,138 +42,161 @@
                 }
               },
               "queryRef": "_Measures.ROI",
-              "nativeQueryRef": "ROI"
+              "nativeQueryRef": "ROI",
+              "displayName": "ROI"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Budget (USD M)"
+                }
+              },
+              "queryRef": "_Measures.Budget (USD M)",
+              "nativeQueryRef": "Budget (USD M)",
+              "displayName": "Budget"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Revenue (USD M)"
+                }
+              },
+              "queryRef": "_Measures.Revenue (USD M)",
+              "nativeQueryRef": "Revenue (USD M)",
+              "displayName": "Revenue"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "ROI"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#4ADE80'"
-                    }
-                  }
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
                 }
               }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"transform\":[{\"window\":[{\"op\":\"row_number\",\"as\":\"_r\"}],\"sort\":[{\"field\":\"ROI\",\"order\":\"descending\"}]},{\"joinaggregate\":[{\"op\":\"max\",\"field\":\"ROI\",\"as\":\"_max\"}]},{\"calculate\":\"datum.ROI / datum._max\",\"as\":\"_p\"},{\"calculate\":\"format(datum.ROI, ''.0f'') + ''x   $'' + format(datum.Budget, '',.1f'') + ''M → $'' + format(datum.Revenue, '',.0f'') + ''M''\",\"as\":\"_lbl\"},{\"calculate\":\"''#'' + datum._r + ''  '' + datum[''Film'']\",\"as\":\"_cat\"}],\"layer\":[{\"mark\":{\"type\":\"bar\",\"height\":{\"band\":0.62},\"cornerRadiusEnd\":4,\"color\":{\"gradient\":\"linear\",\"x1\":0,\"y1\":0,\"x2\":1,\"y2\":0,\"stops\":[{\"offset\":0,\"color\":\"#15803D\"},{\"offset\":1,\"color\":\"#4ADE80\"}]}},\"encoding\":{\"y\":{\"field\":\"_cat\",\"type\":\"nominal\",\"sort\":{\"field\":\"ROI\",\"order\":\"descending\"},\"axis\":{\"title\":null,\"grid\":false,\"labelColor\":\"#EAF2FF\",\"labelFontSize\":13,\"labelLimit\":320}},\"tooltip\":[{\"field\":\"Film\",\"title\":\"Film\",\"type\":\"nominal\"},{\"field\":\"ROI\",\"title\":\"ROI multiple\",\"type\":\"quantitative\",\"format\":\".1f\"},{\"field\":\"Budget\",\"title\":\"Budget ($M)\",\"type\":\"quantitative\",\"format\":\",.1f\"},{\"field\":\"Revenue\",\"title\":\"Revenue ($M)\",\"type\":\"quantitative\",\"format\":\",.1f\"}],\"x\":{\"field\":\"_p\",\"type\":\"quantitative\",\"axis\":null,\"scale\":{\"domain\":[0,2.1]}}}},{\"mark\":{\"type\":\"text\",\"align\":\"left\",\"dx\":6,\"color\":\"#EAF2FF\",\"fontSize\":12},\"encoding\":{\"y\":{\"field\":\"_cat\",\"type\":\"nominal\",\"sort\":{\"field\":\"ROI\",\"order\":\"descending\"},\"axis\":{\"title\":null,\"grid\":false,\"labelColor\":\"#EAF2FF\",\"labelFontSize\":13,\"labelLimit\":320}},\"tooltip\":[{\"field\":\"Film\",\"title\":\"Film\",\"type\":\"nominal\"},{\"field\":\"ROI\",\"title\":\"ROI multiple\",\"type\":\"quantitative\",\"format\":\".1f\"},{\"field\":\"Budget\",\"title\":\"Budget ($M)\",\"type\":\"quantitative\",\"format\":\",.1f\"},{\"field\":\"Revenue\",\"title\":\"Revenue ($M)\",\"type\":\"quantitative\",\"format\":\",.1f\"}],\"x\":{\"field\":\"_p\",\"type\":\"quantitative\"},\"text\":{\"field\":\"_lbl\"}}}]}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "fontSize": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "false"
                 }
               }
             },
-            "fontFamily": {
+            "enableHighlight": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI'"
+                  "Value": "false"
                 }
               }
             },
-            "labelDisplayUnits": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "fontSize": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "568D"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "578D"
                 }
               }
             },
-            "innerPadding": {
+            "supportFieldConfiguration": {
               "expr": {
                 "Literal": {
-                  "Value": "55L"
+                  "Value": "'{\"Film\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"ROI\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Budget\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Revenue\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
                 }
               }
             },
-            "maxMarginFactor": {
+            "denebMetaVersion": {
               "expr": {
                 "Literal": {
-                  "Value": "50L"
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "developer": [
         {
           "properties": {
-            "end": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "330D"
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -251,7 +270,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bar chart of the ten films with the highest return on investment among films with at least a one million dollar budget'"
+                  "Value": "'Ten films with a budget of at least one million dollars and the highest revenue to budget multiple, ranked'"
                 }
               }
             }
@@ -264,7 +283,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revenue divided by budget · label: budget → revenue'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -372,7 +423,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [

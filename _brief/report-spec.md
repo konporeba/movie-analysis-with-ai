@@ -77,7 +77,7 @@ Done in the shared `Movies` query in `expressions.tmdl`:
 - Budget and revenue exist for only about a fifth of the films, so the Money page and every ROI figure cover that subset.
 - 2017 is a partial year, which makes the last point of the films-per-year line look like a drop.
 - Weighted Rating and Avg Rating only count films with enough votes; small groups can still be noisy.
-- The HTML KPI cards depend on the AppSource HTML Content visual, which must be available in Power BI Desktop.
+- The HTML KPI cards depend on the AppSource HTML Content visual and most charts on the AppSource Deneb visual; both must be available in Power BI Desktop.
 - The `Source` step in `expressions.tmdl` uses an absolute path to `movies_metadata.csv`; change it after cloning. The CSV is not in the repo (see `README.md`).
 - Not built: Star SVG, rank numbers on the leaderboards, and the release-year range slicer (it did not fit the header).
 
@@ -133,6 +133,18 @@ The entries below are the dated log of changes and are kept as history. Later en
 
 ## Accent color: signal green (2026-09-19)
 - Amber replaced by signal green `#4ADE80` (ROI charts, Median ROI / Profitable films / Films in selection cards). "Worse than average" arrows and the theme's `bad` color are orange `#FB923C`; theme `neutral` is sky `#60A5FA`.
+
+## Rich KPI cards, new measures and Deneb charts (2026-09-29)
+Built with Power BI Desktop 2.157 (Store build). Generators: `_brief/generator/kpi-measures.js` (measures, upserts `_Measures.tmdl`) and `_brief/generator/upgrade-report.js` (layout + Deneb specs, edits the PBIR files in place).
+- KPI cards are 224 px tall on every page (charts start at y = 380) and text-first: label, value, one insight sentence with a highlighted number (green ▲ / orange ▼ where it is a change), and a line with two supporting facts under a hairline. Content is top-aligned so values line up across a row. A first version with sparklines, metric chips and progress bars was dropped as too busy. The Money page's fourth card is now Profit margin.
+- New measures: Median Budget, Median Revenue, Avg Budget per Film, Profit Margin, Blockbusters / Blockbuster Rate ($100M+ revenue), Big Budget Films ($100M+ budget), Franchise Revenue Share (47 % of revenue from 10 % of films), Franchise Film Share, Top 10 Revenue Share, Films per Year, Peak Year / Peak Year Films, Output Growth vs 1980s (4.4x films per year in 2010-16), Rating Change vs 1980s (-0.31), Median Runtime, % Over 2 Hours, Avg Votes per Film, Genre / Language / Country Share, Median ROI All Genres, Films 5y Avg, Profit (USD M).
+- 16 charts are now Deneb (`deneb7E15AEF80B9E4D4F8E12924291ECE89A`, registered in `publicCustomVisuals`, Vega-Lite, SVG render, tooltips on, selection off), each with a one-line subtitle that explains how to read it:
+  - Overview: films per year (area + 5-yr average) vs 5-yr weighted rating on a second axis; films per genre with share and a rating column; rating distribution with shares (7+ highlighted); top 8 languages lollipop; revenue by decade with hit-rate line.
+  - Money: budget vs revenue log scatter (green profitable / orange loss, size = votes, break-even and 10x lines); median ROI by tier with hit rate; rating by tier dot plot vs all films; median ROI by genre lollipops around the all-genres median; ranked top 10 ROI with budget → revenue labels.
+  - Genre and Country: rating vs all films diverging bars; genre landscape bubble quadrant (films log x rating, bubble = revenue per film); top 10 countries with share and rating; rating (line, best decade marked) and output (columns) by decade.
+  - Title Explorer: top 10 genres by revenue with revenue per film (the chart the user switched to Genre; its title-based Top 10 filter was removed); votes (log) vs rating scatter with log trend and labels for the most voted / best rated films. The title table is unchanged apart from its position.
+- Slicers moved into a hidden filter panel (`_brief/generator/filter-panel.js`). Header: "Filter Summary HTML" chips (HTML Content; one chip per directly filtered field, e.g. "Decade 1990s, 2000s +1", plus the film count, or "No filters applied") and a "☰ FILTERS" action button. Panel: a visual group "Filter panel" (hidden by default, group background off) at the top right with a rounded glowing background shape, title, ✕ close button, the page's dropdown slicers (flat, no tile chrome) and a "Clear all filters" button (ClearAllSlicers). Each page has a Show/Hide bookmark pair in the bookmark group "Filter panel"; they target only the panel group (suppressData, suppressActiveSection). Children of a PBIR visual group are positioned relative to the group.
+- Deneb and PBIR: fields are renamed with projection `displayName` so specs use simple names; field names must not contain `. [ ] \ "`. Inline-data layers (labels, reference lines) must not inherit the chart's x/y encodings. Avoid backslash escapes inside spec strings.
 
 ## Spec refresh and Desktop re-save (2026-09-20)
 - This spec was rewritten to describe the current Neon HUD report; the original Midnight Cinema design contract was removed.

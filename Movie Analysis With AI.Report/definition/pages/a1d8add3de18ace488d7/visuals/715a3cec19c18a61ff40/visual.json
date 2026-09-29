@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "715a3cec19c18a61ff40",
   "position": {
     "x": 32,
-    "y": 320,
+    "y": 380,
     "z": 13000,
-    "height": 304,
+    "height": 344,
     "width": 1224,
     "tabOrder": 13000
   },
   "visual": {
-    "visualType": "lineChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,12 +28,8 @@
               },
               "queryRef": "Movies.Release Year",
               "nativeQueryRef": "Release Year",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Year"
+            },
             {
               "field": {
                 "Measure": {
@@ -46,162 +42,146 @@
                 }
               },
               "queryRef": "_Measures.Movies",
-              "nativeQueryRef": "Movies"
+              "nativeQueryRef": "Movies",
+              "displayName": "Films"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Weighted Rating"
+                }
+              },
+              "queryRef": "_Measures.Weighted Rating",
+              "nativeQueryRef": "Weighted Rating",
+              "displayName": "Rating"
             }
           ]
         }
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#22D3EE'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
+            "provider": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'vegaLite'"
                 }
               }
             },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"transform\":[{\"filter\":\"isValid(datum.Year)\"},{\"window\":[{\"op\":\"mean\",\"field\":\"Films\",\"as\":\"FilmsMA\"}],\"frame\":[-4,0],\"sort\":[{\"field\":\"Year\"}]},{\"window\":[{\"op\":\"mean\",\"field\":\"Rating\",\"as\":\"RatingMA\"}],\"frame\":[-4,0],\"sort\":[{\"field\":\"Year\"}]}],\"encoding\":{\"x\":{\"field\":\"Year\",\"type\":\"quantitative\",\"scale\":{\"nice\":false,\"zero\":false},\"axis\":{\"format\":\"d\",\"grid\":false,\"title\":null,\"tickCount\":12}}},\"layer\":[{\"layer\":[{\"transform\":[{\"filter\":\"datum.Year == 1980\"}],\"mark\":{\"type\":\"rect\",\"color\":\"#22D3EE\",\"opacity\":0.05},\"encoding\":{\"x\":{\"datum\":1980},\"x2\":{\"datum\":1990}}},{\"transform\":[{\"filter\":\"datum.Year == 1980\"}],\"mark\":{\"type\":\"text\",\"align\":\"center\",\"baseline\":\"top\",\"y\":4,\"color\":\"#6C84AB\",\"fontSize\":11},\"encoding\":{\"x\":{\"datum\":1985},\"text\":{\"value\":\"1980s\"}}},{\"mark\":{\"type\":\"area\",\"interpolate\":\"monotone\",\"color\":{\"gradient\":\"linear\",\"x1\":0,\"y1\":1,\"x2\":0,\"y2\":0,\"stops\":[{\"offset\":0,\"color\":\"rgba(34,211,238,0.02)\"},{\"offset\":1,\"color\":\"rgba(34,211,238,0.45)\"}]}},\"encoding\":{\"y\":{\"field\":\"Films\",\"type\":\"quantitative\",\"axis\":{\"title\":\"Films per year\",\"titleColor\":\"#22D3EE\",\"format\":\",.0f\"}}}},{\"mark\":{\"type\":\"line\",\"interpolate\":\"monotone\",\"color\":\"#22D3EE\",\"strokeWidth\":2.5},\"encoding\":{\"y\":{\"field\":\"FilmsMA\",\"type\":\"quantitative\"}}},{\"params\":[{\"name\":\"hover\",\"select\":{\"type\":\"point\",\"encodings\":[\"x\"],\"nearest\":true,\"on\":\"pointerover\",\"clear\":\"pointerout\"}}],\"mark\":{\"type\":\"rule\",\"color\":\"#9DB4D8\",\"strokeDash\":[3,3]},\"encoding\":{\"opacity\":{\"condition\":{\"param\":\"hover\",\"empty\":false,\"value\":0.8},\"value\":0},\"tooltip\":[{\"field\":\"Year\",\"title\":\"Year\",\"type\":\"quantitative\",\"format\":\"d\"},{\"field\":\"Films\",\"title\":\"Films\",\"type\":\"quantitative\",\"format\":\",.0f\"},{\"field\":\"FilmsMA\",\"title\":\"Films, 5-yr avg\",\"type\":\"quantitative\",\"format\":\",.0f\"},{\"field\":\"Rating\",\"title\":\"Weighted rating\",\"type\":\"quantitative\",\"format\":\".2f\"},{\"field\":\"RatingMA\",\"title\":\"Rating, 5-yr avg\",\"type\":\"quantitative\",\"format\":\".2f\"}]}}]},{\"transform\":[{\"filter\":\"datum.Year >= 1915\"}],\"mark\":{\"type\":\"line\",\"interpolate\":\"monotone\",\"color\":\"#A78BFA\",\"strokeWidth\":2.5},\"encoding\":{\"y\":{\"field\":\"RatingMA\",\"type\":\"quantitative\",\"scale\":{\"zero\":false,\"domain\":[5.8,7.6]},\"axis\":{\"orient\":\"right\",\"title\":\"Weighted rating\",\"titleColor\":\"#A78BFA\",\"grid\":false,\"format\":\".1f\"}}}}],\"resolve\":{\"scale\":{\"y\":\"independent\"}}}'"
                 }
               }
             },
-            "fontSize": {
+            "jsonConfig": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
                 }
               }
             },
-            "fontFamily": {
+            "renderMode": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI'"
+                  "Value": "'svg'"
                 }
               }
             },
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
-                }
-              }
-            },
-            "axisType": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Scalar'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "lineStyles": [
-        {
-          "properties": {
-            "strokeWidth": {
-              "expr": {
-                "Literal": {
-                  "Value": "3D"
-                }
-              }
-            },
-            "areaShow": {
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "lineChartType": {
+            "enableContextMenu": {
               "expr": {
                 "Literal": {
-                  "Value": "'smooth'"
+                  "Value": "true"
+                }
+              }
+            },
+            "enableSelection": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "enableHighlight": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "fontSize": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "244D"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#9DB4D8'"
-                    }
-                  }
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "1194D"
                 }
               }
             },
-            "gridlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1A2E55'"
-                    }
-                  }
+            "supportFieldConfiguration": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"Year\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Films\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Rating\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
+                }
+              }
+            },
+            "denebMetaVersion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -223,7 +203,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Films released per year (2017 is a partial year)'"
+                  "Value": "'Films per year vs weighted rating'"
                 }
               }
             },
@@ -275,7 +255,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Line chart of the number of films released each year, rising steeply after 1990'"
+                  "Value": "'Films released per year since 1874 with a five-year average, and the five-year average weighted rating on a second axis'"
                 }
               }
             }
@@ -288,7 +268,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Area: films released per year · cyan line: 5-year average · violet: weighted rating, 5-year average (right axis) · 2017 is a partial year'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -396,6 +408,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

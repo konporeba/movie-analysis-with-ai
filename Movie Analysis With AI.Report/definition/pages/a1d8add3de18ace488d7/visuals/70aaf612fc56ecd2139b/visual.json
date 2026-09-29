@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "70aaf612fc56ecd2139b",
   "position": {
-    "x": 816,
-    "y": 648,
+    "x": 856,
+    "y": 748,
     "z": 17000,
-    "height": 400,
-    "width": 440,
+    "height": 300,
+    "width": 400,
     "tabOrder": 17000
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,12 +28,23 @@
               },
               "queryRef": "Movies.Decade",
               "nativeQueryRef": "Decade",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Decade"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Movies"
+                    }
+                  },
+                  "Property": "Decade Sort"
+                }
+              },
+              "queryRef": "Movies.Decade Sort",
+              "nativeQueryRef": "Decade Sort",
+              "displayName": "Sort"
+            },
             {
               "field": {
                 "Measure": {
@@ -46,125 +57,161 @@
                 }
               },
               "queryRef": "_Measures.Total Revenue",
-              "nativeQueryRef": "Total Revenue"
+              "nativeQueryRef": "Total Revenue",
+              "displayName": "Revenue"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Hit Rate"
+                }
+              },
+              "queryRef": "_Measures.Hit Rate",
+              "nativeQueryRef": "Hit Rate",
+              "displayName": "HitRate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Movies with Financials"
+                }
+              },
+              "queryRef": "_Measures.Movies with Financials",
+              "nativeQueryRef": "Movies with Financials",
+              "displayName": "Fin"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Movies"
-                  }
-                },
-                "Property": "Decade Sort"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#3B82F6'"
-                    }
-                  }
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
                 }
               }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"transform\":[{\"calculate\":\"datum.Decade == ''Pre-1920'' ? ''Pre'' : \\\"''\\\" + substring(datum.Decade, 2)\",\"as\":\"D\"},{\"calculate\":\"datum.Fin >= 30 ? datum.HitRate : null\",\"as\":\"Hit\"}],\"encoding\":{\"x\":{\"field\":\"D\",\"type\":\"ordinal\",\"sort\":{\"field\":\"Sort\"},\"axis\":{\"title\":null,\"labelAngle\":0,\"grid\":false,\"labelFontSize\":11}},\"tooltip\":[{\"field\":\"Decade\",\"title\":\"Decade\",\"type\":\"nominal\"},{\"field\":\"Revenue\",\"title\":\"Revenue\",\"type\":\"quantitative\",\"format\":\"$,.0f\"},{\"field\":\"HitRate\",\"title\":\"Profitable films\",\"type\":\"quantitative\",\"format\":\".0%\"},{\"field\":\"Fin\",\"title\":\"Films with financials\",\"type\":\"quantitative\",\"format\":\",.0f\"}]},\"layer\":[{\"mark\":{\"type\":\"bar\",\"width\":{\"band\":0.62},\"cornerRadiusEnd\":3,\"color\":{\"gradient\":\"linear\",\"x1\":0,\"y1\":1,\"x2\":0,\"y2\":0,\"stops\":[{\"offset\":0,\"color\":\"#1D4ED8\"},{\"offset\":1,\"color\":\"#3B82F6\"}]}},\"encoding\":{\"y\":{\"field\":\"Revenue\",\"type\":\"quantitative\",\"axis\":{\"title\":null,\"labelExpr\":\"datum.value >= 1e9 ? ''$'' + format(datum.value / 1e9, '',.0f'') + ''bn'' : datum.value >= 1e6 ? ''$'' + format(datum.value / 1e6, '',.0f'') + ''M'' : ''$'' + format(datum.value, '',.0f'')\",\"tickCount\":4}}}},{\"layer\":[{\"mark\":{\"type\":\"line\",\"color\":\"#4ADE80\",\"strokeWidth\":2.5,\"interpolate\":\"monotone\"}},{\"mark\":{\"type\":\"circle\",\"color\":\"#4ADE80\",\"size\":36,\"opacity\":1}}],\"encoding\":{\"y\":{\"field\":\"Hit\",\"type\":\"quantitative\",\"scale\":{\"domain\":[0,1]},\"axis\":{\"orient\":\"right\",\"format\":\".0%\",\"grid\":false,\"title\":null,\"labelColor\":\"#4ADE80\",\"tickCount\":3}}}}],\"resolve\":{\"scale\":{\"y\":\"independent\"}}}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "fontSize": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "false"
                 }
               }
             },
-            "fontFamily": {
+            "enableHighlight": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI'"
+                  "Value": "false"
                 }
               }
             },
-            "labelDisplayUnits": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "1000000000D"
-                }
-              }
-            },
-            "labelPrecision": {
-              "expr": {
-                "Literal": {
-                  "Value": "0L"
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "fontSize": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "200D"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "370D"
                 }
               }
             },
-            "innerPadding": {
+            "supportFieldConfiguration": {
               "expr": {
                 "Literal": {
-                  "Value": "40L"
+                  "Value": "'{\"Decade\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Sort\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Revenue\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"HitRate\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Fin\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
+                }
+              }
+            },
+            "denebMetaVersion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -186,7 +233,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Revenue by decade'"
+                  "Value": "'Revenue and hit rate by decade'"
                 }
               }
             },
@@ -238,7 +285,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bar chart of total revenue by decade, growing sharply from the 1980s'"
+                  "Value": "'Total revenue per decade as columns and the share of profitable films as a line'"
                 }
               }
             }
@@ -251,7 +298,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Bars: revenue · green line: share of films that made a profit'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -359,6 +438,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

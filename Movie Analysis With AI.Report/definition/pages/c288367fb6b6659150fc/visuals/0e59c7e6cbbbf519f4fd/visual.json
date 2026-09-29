@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "0e59c7e6cbbbf519f4fd",
   "position": {
     "x": 816,
-    "y": 280,
+    "y": 380,
     "z": 15000,
-    "height": 768,
+    "height": 668,
     "width": 440,
     "tabOrder": 15000
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,12 +28,8 @@
               },
               "queryRef": "Genres.Genre",
               "nativeQueryRef": "Genre",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Genre"
+            },
             {
               "field": {
                 "Measure": {
@@ -46,118 +42,146 @@
                 }
               },
               "queryRef": "_Measures.Median ROI",
-              "nativeQueryRef": "Median ROI"
+              "nativeQueryRef": "Median ROI",
+              "displayName": "ROI"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Median ROI All Genres"
+                }
+              },
+              "queryRef": "_Measures.Median ROI All Genres",
+              "nativeQueryRef": "Median ROI All Genres",
+              "displayName": "AllROI"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "Median ROI"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#4ADE80'"
-                    }
-                  }
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
                 }
               }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"transform\":[{\"calculate\":\"datum.ROI >= datum.AllROI\",\"as\":\"Above\"}],\"encoding\":{\"y\":{\"field\":\"Genre\",\"type\":\"nominal\",\"sort\":{\"field\":\"ROI\",\"order\":\"descending\"},\"axis\":{\"title\":null,\"grid\":false,\"labelColor\":\"#EAF2FF\",\"labelFontSize\":13}},\"tooltip\":[{\"field\":\"Genre\",\"title\":\"Genre\",\"type\":\"nominal\"},{\"field\":\"ROI\",\"title\":\"Median ROI\",\"type\":\"quantitative\",\"format\":\".2f\"},{\"field\":\"AllROI\",\"title\":\"All genres\",\"type\":\"quantitative\",\"format\":\".2f\"}]},\"layer\":[{\"mark\":{\"type\":\"rule\",\"strokeDash\":[4,3],\"color\":\"#9DB4D8\",\"opacity\":0.35},\"encoding\":{\"x\":{\"field\":\"AllROI\",\"type\":\"quantitative\"}}},{\"mark\":{\"type\":\"rule\",\"strokeWidth\":2.5},\"encoding\":{\"x\":{\"field\":\"AllROI\",\"type\":\"quantitative\"},\"x2\":{\"field\":\"ROI\"},\"color\":{\"condition\":{\"test\":\"datum.Above\",\"value\":\"#4ADE80\"},\"value\":\"#FB923C\"}}},{\"mark\":{\"type\":\"circle\",\"size\":130,\"opacity\":1,\"stroke\":\"#0B1730\",\"strokeWidth\":2},\"encoding\":{\"x\":{\"field\":\"ROI\",\"type\":\"quantitative\",\"scale\":{\"zero\":true,\"padding\":24},\"axis\":{\"title\":null,\"labelExpr\":\"format(datum.value, ''.1f'') + ''x''\",\"tickCount\":5}},\"color\":{\"condition\":{\"test\":\"datum.Above\",\"value\":\"#4ADE80\"},\"value\":\"#FB923C\"}}},{\"mark\":{\"type\":\"text\",\"fontSize\":12,\"align\":{\"expr\":\"datum.Above ? ''left'' : ''right''\"},\"dx\":{\"expr\":\"datum.Above ? 11 : -11\"}},\"encoding\":{\"x\":{\"field\":\"ROI\",\"type\":\"quantitative\"},\"text\":{\"field\":\"ROI\",\"format\":\".1f\"}}}]}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "fontSize": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "false"
                 }
               }
             },
-            "fontFamily": {
+            "enableHighlight": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI'"
+                  "Value": "false"
                 }
               }
             },
-            "labelDisplayUnits": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "fontSize": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "568D"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "410D"
                 }
               }
             },
-            "innerPadding": {
+            "supportFieldConfiguration": {
               "expr": {
                 "Literal": {
-                  "Value": "40L"
+                  "Value": "'{\"Genre\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"ROI\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"AllROI\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
+                }
+              }
+            },
+            "denebMetaVersion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -179,7 +203,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median ROI by genre (excl. TV Movie)'"
+                  "Value": "'Median ROI by genre'"
                 }
               }
             },
@@ -231,7 +255,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bar chart of median return on investment by genre, excluding TV Movie which has too few films with known financials'"
+                  "Value": "'Median ROI per genre shown as lollipops around the median of all films; green above, orange below'"
                 }
               }
             }
@@ -244,7 +268,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Median film vs all genres (dashed) · excl. TV Movie'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -352,7 +408,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [

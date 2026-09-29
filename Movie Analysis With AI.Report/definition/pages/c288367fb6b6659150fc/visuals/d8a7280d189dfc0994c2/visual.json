@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "d8a7280d189dfc0994c2",
   "position": {
-    "x": 432,
-    "y": 720,
+    "x": 424,
+    "y": 804,
     "z": 14000,
-    "height": 328,
-    "width": 360,
+    "height": 244,
+    "width": 368,
     "tabOrder": 14000
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,12 +28,23 @@
               },
               "queryRef": "Movies.Budget Tier",
               "nativeQueryRef": "Budget Tier",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Tier"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Movies"
+                    }
+                  },
+                  "Property": "Budget Tier Sort"
+                }
+              },
+              "queryRef": "Movies.Budget Tier Sort",
+              "nativeQueryRef": "Budget Tier Sort",
+              "displayName": "Sort"
+            },
             {
               "field": {
                 "Measure": {
@@ -46,131 +57,146 @@
                 }
               },
               "queryRef": "_Measures.Weighted Rating",
-              "nativeQueryRef": "Weighted Rating"
+              "nativeQueryRef": "Weighted Rating",
+              "displayName": "Rating"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "All Films Rating"
+                }
+              },
+              "queryRef": "_Measures.All Films Rating",
+              "nativeQueryRef": "All Films Rating",
+              "displayName": "AllRating"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Movies"
-                  }
-                },
-                "Property": "Budget Tier Sort"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#A78BFA'"
-                    }
-                  }
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
                 }
               }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"encoding\":{\"y\":{\"field\":\"Tier\",\"type\":\"nominal\",\"sort\":{\"field\":\"Sort\"},\"axis\":{\"title\":null,\"grid\":false,\"labelColor\":\"#EAF2FF\",\"labelFontSize\":12}},\"tooltip\":[{\"field\":\"Tier\",\"title\":\"Budget tier\",\"type\":\"nominal\"},{\"field\":\"Rating\",\"title\":\"Weighted rating\",\"type\":\"quantitative\",\"format\":\".2f\"},{\"field\":\"AllRating\",\"title\":\"All films\",\"type\":\"quantitative\",\"format\":\".2f\"}]},\"layer\":[{\"mark\":{\"type\":\"rule\",\"strokeDash\":[4,3],\"color\":\"#9DB4D8\",\"opacity\":0.7},\"encoding\":{\"x\":{\"field\":\"AllRating\",\"type\":\"quantitative\"}}},{\"mark\":{\"type\":\"rule\",\"color\":\"#A78BFA\",\"strokeWidth\":2,\"opacity\":0.55},\"encoding\":{\"x\":{\"field\":\"AllRating\",\"type\":\"quantitative\"},\"x2\":{\"field\":\"Rating\"}}},{\"mark\":{\"type\":\"circle\",\"size\":150,\"color\":\"#A78BFA\",\"opacity\":1,\"stroke\":\"#0B1730\",\"strokeWidth\":2},\"encoding\":{\"x\":{\"field\":\"Rating\",\"type\":\"quantitative\",\"scale\":{\"zero\":false,\"padding\":30},\"axis\":{\"title\":null,\"format\":\".1f\",\"tickCount\":4}}}},{\"mark\":{\"type\":\"text\",\"align\":\"left\",\"dx\":12,\"fontSize\":12,\"fontWeight\":\"bold\"},\"encoding\":{\"x\":{\"field\":\"Rating\",\"type\":\"quantitative\"},\"text\":{\"field\":\"Rating\",\"format\":\".2f\"}}}]}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "fontSize": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "false"
                 }
               }
             },
-            "fontFamily": {
+            "enableHighlight": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI'"
+                  "Value": "false"
                 }
               }
             },
-            "labelDisplayUnits": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "categoryAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "fontSize": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "144D"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "338D"
                 }
               }
             },
-            "innerPadding": {
+            "supportFieldConfiguration": {
               "expr": {
                 "Literal": {
-                  "Value": "40L"
+                  "Value": "'{\"Tier\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Sort\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Rating\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"AllRating\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
+                }
+              }
+            },
+            "denebMetaVersion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "developer": [
         {
           "properties": {
-            "start": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "5D"
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -192,7 +218,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Rating by tier (axis from 5)'"
+                  "Value": "'Rating by budget tier'"
                 }
               }
             },
@@ -244,7 +270,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Bar chart of weighted rating for each budget tier; ratings barely change as budgets grow'"
+                  "Value": "'Weighted rating per budget tier compared with the all-films rating'"
                 }
               }
             }
@@ -257,7 +283,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Weighted rating · dashed line: all films'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -365,7 +423,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [

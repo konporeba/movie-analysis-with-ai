@@ -1,0 +1,27 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Title Explorer · Show filters",
+  "name": "Bookmark4c22d110c67c06b33706",
+  "options": {
+    "applyOnlyToTargetVisuals": true,
+    "targetVisualNames": [
+      "fda4d8380a98f431b379"
+    ],
+    "suppressActiveSection": true,
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.0",
+    "activeSection": "36d04fef1908cd91b0ac",
+    "sections": {
+      "36d04fef1908cd91b0ac": {
+        "visualContainers": {},
+        "visualContainerGroups": {
+          "fda4d8380a98f431b379": {
+            "isHidden": false
+          }
+        }
+      }
+    }
+  }
+}
