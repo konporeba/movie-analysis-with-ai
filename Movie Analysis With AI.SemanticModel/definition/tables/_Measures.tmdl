@@ -162,350 +162,633 @@ table _Measures
 		displayFolder: Financials
 		lineageTag: 5bec2014-b919-4f07-97c5-b36def065893
 
-	/// HTML card for the HTML Content visual: film count, share of all films and a share bar.
-	measure 'KPI Films HTML' =
-			VAR _accent = "#22D3EE"
-			VAR _glow = "rgba(34,211,238,.55)"
-			VAR _tint = "rgba(34,211,238,.16)"
-			VAR _label = "FILMS IN SELECTION"
-			VAR _value = FORMAT([Movies], "#,##0", "en-US")
-			VAR _share = COALESCE([Share of All Films], 0)
-			VAR _context = "<span style='color:" & _accent & "'>&#9679;</span> " & FORMAT(_share, "0.0%", "en-US") & " of all films"
-			VAR _pct = ROUND(MIN(_share, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:4px 10px 4px 24px;border-radius:12px;background:linear-gradient(135deg," & _tint & " 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'>" &
-			"<div style='position:absolute;left:0;top:14%;height:72%;width:5px;border-radius:0 4px 4px 0;background:" & _accent & ";box-shadow:0 0 12px " & _accent & "'></div>" &
-			"<div style='flex:1;min-width:0'>" &
-			"<div style='font-size:13px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div>" &
-			"<div style='font-size:46px;line-height:1.1;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 18px " & _glow & "'>" & _value & "</div>" &
-			"<div style='font-size:14px;color:#9DB4D8;margin-top:2px'>" & _context & "</div>" &
-			"<div style='margin-top:8px;height:6px;border-radius:3px;background:#1F3A6B'><div style='height:6px;border-radius:3px;width:" & _pct & "%;background:" & _accent & ";box-shadow:0 0 8px " & _accent & "'></div></div>" &
-			"</div></div>"
+	/// KPI card: film count, output growth vs the 1980s, peak year and share of the catalogue.
+	measure 'KPI Films HTML' = ```
+			
+						VAR _g = COALESCE([Output Growth vs 1980s], 0)
+						VAR __value = FORMAT(COALESCE([Movies], 0), "#,##0", "en-US")
+						VAR __hi = IF(_g - 1 >= 0, "&#9650; ", "&#9660; ") & FORMAT(_g, "0.0", "en-US") & "x"
+						VAR __hicol = IF(_g - 1 >= 0, "#34D399", "#FB923C")
+						VAR __text = "films per year vs 1980s"
+						VAR __f0 = COALESCE(FORMAT([Peak Year], "0", "en-US"), "-") & " (" & FORMAT(COALESCE([Peak Year Films], 0), "#,##0", "en-US") & ")"
+						VAR __f1 = FORMAT(COALESCE([Share of All Films], 0), "0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(34,211,238,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#22D3EE;box-shadow:0 0 12px #22D3EE'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>FILMS IN SELECTION</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(34,211,238,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Peak year</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Catalogue</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: aed8d2a9-4c21-488b-9cbe-92dafa13e3d3
 
-	/// HTML card for the HTML Content visual: weighted rating, stars, difference vs all films and a score bar.
-	measure 'KPI Rating HTML' =
-			VAR _accent = "#A78BFA"
-			VAR _glow = "rgba(167,139,250,.55)"
-			VAR _tint = "rgba(167,139,250,.16)"
-			VAR _label = "WEIGHTED RATING (0-10)"
-			VAR _score = COALESCE([Weighted Rating], 0)
-			VAR _value = FORMAT(_score, "0.00", "en-US")
-			VAR _delta = COALESCE([Rating vs All Films], 0)
-			VAR _dcol = IF(_delta >= 0, "#34D399", "#FB923C")
-			VAR _arrow = IF(_delta >= 0, "&#9650; +", "&#9660; ")
-			VAR _context = "<span style='color:" & _accent & ";letter-spacing:2px'>" & [Rating Stars] & "</span> <span style='color:" & _dcol & "'>" & _arrow & FORMAT(_delta, "0.00", "en-US") & "</span> vs all"
-			VAR _pct = ROUND(MIN(_score / 10, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:4px 10px 4px 24px;border-radius:12px;background:linear-gradient(135deg," & _tint & " 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'>" &
-			"<div style='position:absolute;left:0;top:14%;height:72%;width:5px;border-radius:0 4px 4px 0;background:" & _accent & ";box-shadow:0 0 12px " & _accent & "'></div>" &
-			"<div style='flex:1;min-width:0'>" &
-			"<div style='font-size:13px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div>" &
-			"<div style='font-size:46px;line-height:1.1;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 18px " & _glow & "'>" & _value & "</div>" &
-			"<div style='font-size:14px;color:#9DB4D8;margin-top:2px'>" & _context & "</div>" &
-			"<div style='margin-top:8px;height:6px;border-radius:3px;background:#1F3A6B'><div style='height:6px;border-radius:3px;width:" & _pct & "%;background:" & _accent & ";box-shadow:0 0 8px " & _accent & "'></div></div>" &
-			"</div></div>"
+	/// KPI card: weighted rating, change from the 1980s to the 2010s, share rated 7+ and difference vs all films.
+	measure 'KPI Rating HTML' = ```
+			
+						VAR _c = COALESCE([Rating Change vs 1980s], 0)
+						VAR __value = FORMAT(COALESCE([Weighted Rating], 0), "0.00", "en-US") & "<span style='font-size:22px;color:#9DB4D8'> / 10</span>"
+						VAR __hi = IF(_c >= 0, "&#9650; ", "&#9660; ") & FORMAT(ABS(_c), "0.00", "en-US")
+						VAR __hicol = IF(_c >= 0, "#34D399", "#FB923C")
+						VAR __text = "in the 2010s vs the 1980s"
+						VAR __f0 = FORMAT(COALESCE([% Rated 7+], 0), "0%", "en-US")
+						VAR __f1 = IF(COALESCE([Rating vs All Films], 0) >= 0, "+", "") & FORMAT(COALESCE([Rating vs All Films], 0), "0.00", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(167,139,250,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#A78BFA;box-shadow:0 0 12px #A78BFA'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>WEIGHTED RATING</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(167,139,250,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Rated 7+</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>vs all films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: a880f40f-c3e8-4b7b-9d52-54fb084c56e8
 
-	/// HTML card for the HTML Content visual: total revenue and profit margin bar (films with known budget and revenue).
-	measure 'KPI Revenue HTML' =
-			VAR _accent = "#3B82F6"
-			VAR _glow = "rgba(59,130,246,.6)"
-			VAR _tint = "rgba(59,130,246,.18)"
-			VAR _label = "TOTAL REVENUE"
-			VAR _v = COALESCE([Total Revenue], 0)
-			VAR _value = IF(_v >= 1000000000, "$" & FORMAT(_v / 1000000000, "#,##0.0", "en-US") & "bn", "$" & FORMAT(_v / 1000000, "#,##0", "en-US") & "M")
-			VAR _margin = COALESCE(DIVIDE([Total Profit], CALCULATE(SUM(Movies[Revenue]), Movies[Has Financials] = "Yes")), 0)
-			VAR _context = "<span style='color:" & _accent & "'>&#9679;</span> Profit margin " & FORMAT(_margin, "0%", "en-US")
-			VAR _pct = ROUND(MAX(MIN(_margin, 1), 0) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:4px 10px 4px 24px;border-radius:12px;background:linear-gradient(135deg," & _tint & " 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'>" &
-			"<div style='position:absolute;left:0;top:14%;height:72%;width:5px;border-radius:0 4px 4px 0;background:" & _accent & ";box-shadow:0 0 12px " & _accent & "'></div>" &
-			"<div style='flex:1;min-width:0'>" &
-			"<div style='font-size:13px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div>" &
-			"<div style='font-size:46px;line-height:1.1;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 18px " & _glow & "'>" & _value & "</div>" &
-			"<div style='font-size:14px;color:#9DB4D8;margin-top:2px'>" & _context & "</div>" &
-			"<div style='margin-top:8px;height:6px;border-radius:3px;background:#1F3A6B'><div style='height:6px;border-radius:3px;width:" & _pct & "%;background:" & _accent & ";box-shadow:0 0 8px " & _accent & "'></div></div>" &
-			"</div></div>"
+	/// KPI card: total revenue, share earned by franchise films, profit margin and top-10 concentration.
+	measure 'KPI Revenue HTML' = ```
+			
+						VAR __value = (VAR __m = COALESCE([Total Revenue], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __hi = FORMAT(COALESCE([Franchise Revenue Share], 0), "0%", "en-US")
+						VAR __hicol = "#3B82F6"
+						VAR __text = "earned by franchise films"
+						VAR __f0 = FORMAT(COALESCE([Profit Margin], 0), "0%", "en-US")
+						VAR __f1 = FORMAT(COALESCE([Top 10 Revenue Share], 0), "0.0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(59,130,246,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#3B82F6;box-shadow:0 0 12px #3B82F6'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>TOTAL REVENUE</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(59,130,246,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Margin</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Top 10 films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 4a6b7147-4d9e-43ed-b2ef-3f5a316b9e10
 
-	/// HTML card for the HTML Content visual: total budget and budget as a share of revenue (films with known budget and revenue).
-	measure 'KPI Budget HTML' =
-			VAR _accent = "#60A5FA"
-			VAR _glow = "rgba(96,165,250,.6)"
-			VAR _tint = "rgba(96,165,250,.16)"
-			VAR _label = "TOTAL BUDGET"
-			VAR _v = COALESCE([Total Budget], 0)
-			VAR _value = IF(_v >= 1000000000, "$" & FORMAT(_v / 1000000000, "#,##0.0", "en-US") & "bn", "$" & FORMAT(_v / 1000000, "#,##0", "en-US") & "M")
-			VAR _ratio = COALESCE(DIVIDE(CALCULATE(SUM(Movies[Budget]), Movies[Has Financials] = "Yes"), CALCULATE(SUM(Movies[Revenue]), Movies[Has Financials] = "Yes")), 0)
-			VAR _context = "<span style='color:" & _accent & "'>&#9679;</span> Costs " & FORMAT(_ratio, "0%", "en-US") & " of revenue"
-			VAR _pct = ROUND(MAX(MIN(_ratio, 1), 0) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:4px 10px 4px 24px;border-radius:12px;background:linear-gradient(135deg," & _tint & " 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'>" &
-			"<div style='position:absolute;left:0;top:14%;height:72%;width:5px;border-radius:0 4px 4px 0;background:" & _accent & ";box-shadow:0 0 12px " & _accent & "'></div>" &
-			"<div style='flex:1;min-width:0'>" &
-			"<div style='font-size:13px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div>" &
-			"<div style='font-size:46px;line-height:1.1;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 18px " & _glow & "'>" & _value & "</div>" &
-			"<div style='font-size:14px;color:#9DB4D8;margin-top:2px'>" & _context & "</div>" &
-			"<div style='margin-top:8px;height:6px;border-radius:3px;background:#1F3A6B'><div style='height:6px;border-radius:3px;width:" & _pct & "%;background:" & _accent & ";box-shadow:0 0 8px " & _accent & "'></div></div>" &
-			"</div></div>"
+	/// KPI card: total budget, budget as a share of revenue, median budget and number of $100M+ productions.
+	measure 'KPI Budget HTML' = ```
+			
+						VAR _ratio = COALESCE(DIVIDE(CALCULATE(SUM(Movies[Budget]), Movies[Has Financials] = "Yes"), CALCULATE(SUM(Movies[Revenue]), Movies[Has Financials] = "Yes")), 0)
+						VAR __value = (VAR __m = COALESCE([Total Budget], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __hi = FORMAT(_ratio, "0%", "en-US")
+						VAR __hicol = "#60A5FA"
+						VAR __text = "of revenue went into budgets"
+						VAR __f0 = (VAR __m = COALESCE([Median Budget], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __f1 = FORMAT(COALESCE([Big Budget Films], 0), "#,##0", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(96,165,250,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#60A5FA;box-shadow:0 0 12px #60A5FA'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>TOTAL BUDGET</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(96,165,250,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Median</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>$100M+ budgets</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: c24c1190-bd67-4d05-b4aa-213185cd6254
 
-	/// HTML card for the HTML Content visual: average runtime, difference vs all films and a length bar (180 min = full).
-	measure 'KPI Runtime HTML' =
-			VAR _accent = "#2DD4BF"
-			VAR _glow = "rgba(45,212,191,.55)"
-			VAR _tint = "rgba(45,212,191,.16)"
-			VAR _label = "AVERAGE RUNTIME"
-			VAR _m = COALESCE([Avg Runtime], 0)
-			VAR _value = FORMAT(_m, "0", "en-US") & "<span style='font-size:22px;color:#9DB4D8'> min</span>"
-			VAR _delta = COALESCE([Runtime vs All Films], 0)
-			VAR _dcol = IF(_delta >= 0, "#34D399", "#FB923C")
-			VAR _arrow = IF(_delta >= 0, "&#9650; +", "&#9660; ")
-			VAR _context = "<span style='color:" & _dcol & "'>" & _arrow & FORMAT(ABS(_delta), "0", "en-US") & " min</span> vs all films"
-			VAR _pct = ROUND(MAX(MIN(_m / 180, 1), 0) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:4px 10px 4px 24px;border-radius:12px;background:linear-gradient(135deg," & _tint & " 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'>" &
-			"<div style='position:absolute;left:0;top:14%;height:72%;width:5px;border-radius:0 4px 4px 0;background:" & _accent & ";box-shadow:0 0 12px " & _accent & "'></div>" &
-			"<div style='flex:1;min-width:0'>" &
-			"<div style='font-size:13px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div>" &
-			"<div style='font-size:46px;line-height:1.1;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 18px " & _glow & "'>" & _value & "</div>" &
-			"<div style='font-size:14px;color:#9DB4D8;margin-top:2px'>" & _context & "</div>" &
-			"<div style='margin-top:8px;height:6px;border-radius:3px;background:#1F3A6B'><div style='height:6px;border-radius:3px;width:" & _pct & "%;background:" & _accent & ";box-shadow:0 0 8px " & _accent & "'></div></div>" &
-			"</div></div>"
+	/// KPI card: average runtime, share of films over two hours, median runtime and difference vs all films.
+	measure 'KPI Runtime HTML' = ```
+			
+						VAR __value = FORMAT(COALESCE([Avg Runtime], 0), "0", "en-US") & "<span style='font-size:22px;color:#9DB4D8'> min</span>"
+						VAR __hi = FORMAT(COALESCE([% Over 2 Hours], 0), "0%", "en-US")
+						VAR __hicol = "#2DD4BF"
+						VAR __text = "of films run over 2 hours"
+						VAR __f0 = FORMAT(COALESCE([Median Runtime], 0), "0", "en-US") & " min"
+						VAR __f1 = IF(COALESCE([Runtime vs All Films], 0) >= 0, "+", "") & FORMAT(COALESCE([Runtime vs All Films], 0), "0", "en-US") & " min"
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(45,212,191,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#2DD4BF;box-shadow:0 0 12px #2DD4BF'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>AVERAGE RUNTIME</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(45,212,191,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Median</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>vs all films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: bb14709c-8cf7-4033-8b11-b27dd8fdaaf1
 
-	/// HTML card for the HTML Content visual: share of profitable films among films with known financials, with a rate bar.
-	measure 'KPI Hit Rate HTML' =
-			VAR _accent = "#4ADE80"
-			VAR _glow = "rgba(74,222,128,.5)"
-			VAR _tint = "rgba(74,222,128,.14)"
-			VAR _label = "PROFITABLE FILMS"
-			VAR _hr = COALESCE([Hit Rate], 0)
-			VAR _value = FORMAT(_hr, "0%", "en-US")
-			VAR _context = "<span style='color:" & _accent & "'>&#9679;</span> of " & FORMAT([Movies with Financials], "#,##0", "en-US") & " films with financials"
-			VAR _pct = ROUND(MAX(MIN(_hr, 1), 0) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:4px 10px 4px 24px;border-radius:12px;background:linear-gradient(135deg," & _tint & " 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'>" &
-			"<div style='position:absolute;left:0;top:14%;height:72%;width:5px;border-radius:0 4px 4px 0;background:" & _accent & ";box-shadow:0 0 12px " & _accent & "'></div>" &
-			"<div style='flex:1;min-width:0'>" &
-			"<div style='font-size:13px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div>" &
-			"<div style='font-size:46px;line-height:1.1;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 18px " & _glow & "'>" & _value & "</div>" &
-			"<div style='font-size:14px;color:#9DB4D8;margin-top:2px'>" & _context & "</div>" &
-			"<div style='margin-top:8px;height:6px;border-radius:3px;background:#1F3A6B'><div style='height:6px;border-radius:3px;width:" & _pct & "%;background:" & _accent & ";box-shadow:0 0 8px " & _accent & "'></div></div>" &
-			"</div></div>"
+	/// KPI card: share of films with known financials that made a profit, median ROI and $100M+ grossers.
+	measure 'KPI Hit Rate HTML' = ```
+			
+						VAR __value = FORMAT(COALESCE([Hit Rate], 0), "0%", "en-US")
+						VAR __hi = FORMAT(COALESCE([Movies with Financials], 0), "#,##0", "en-US")
+						VAR __hicol = "#EAF2FF"
+						VAR __text = "films with known financials"
+						VAR __f0 = FORMAT(COALESCE([Median ROI], 0), "0.0", "en-US") & "x"
+						VAR __f1 = FORMAT(COALESCE([Blockbusters], 0), "#,##0", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(74,222,128,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#4ADE80;box-shadow:0 0 12px #4ADE80'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>PROFITABLE FILMS</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(74,222,128,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Median ROI</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>$100M+ grossers</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: ed502ea0-e8d1-4d7f-96ed-79de1df50a13
 
-	/// Compact HTML card: median ROI multiple with a bar (3x = full).
-	measure 'KPI Median ROI HTML' =
-			VAR _acc = "#4ADE80"
-			VAR _rgb = "74,222,128"
-			VAR _v = COALESCE([Median ROI], 0)
-			VAR _label = "MEDIAN ROI"
-			VAR _value = FORMAT(_v, "0.0", "en-US") & "x"
-			VAR _ctx = "profit per $1 of budget (median film)"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(MAX(_v / 3, 0), 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.14) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: median ROI multiple as profit per dollar, hit rate and total profit.
+	measure 'KPI Median ROI HTML' = ```
+			
+						VAR __value = FORMAT(COALESCE([Median ROI], 0), "0.0", "en-US") & "x"
+						VAR __hi = "$" & FORMAT(COALESCE([Median ROI], 0), "0.00", "en-US")
+						VAR __hicol = "#4ADE80"
+						VAR __text = "profit per $1 of budget for the median film"
+						VAR __f0 = FORMAT(COALESCE([Hit Rate], 0), "0%", "en-US")
+						VAR __f1 = (VAR __m = COALESCE([Total Profit], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(74,222,128,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#4ADE80;box-shadow:0 0 12px #4ADE80'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>MEDIAN ROI</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(74,222,128,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Hit rate</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Total profit</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 12affe34-68af-4b92-9e71-d7552db81421
 
-	/// Compact HTML card: average budget per film with a bar of budget as a share of average revenue.
-	measure 'KPI Avg Budget HTML' =
-			VAR _acc = "#60A5FA"
-			VAR _rgb = "96,165,250"
-			VAR _b = COALESCE(AVERAGE(Movies[Budget]), 0)
-			VAR _r = COALESCE([Avg Revenue per Film], 0)
-			VAR _label = "AVERAGE BUDGET PER FILM"
-			VAR _value = "$" & FORMAT(_b / 1000000, "#,##0.0", "en-US") & "M"
-			VAR _ctx = "vs $" & FORMAT(_r / 1000000, "#,##0.0", "en-US") & "M average revenue"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(DIVIDE(_b, _r, 0), 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: average budget, how far blockbusters pull it above the median, and $100M+ budgets.
+	measure 'KPI Avg Budget HTML' = ```
+			
+						VAR _skew = DIVIDE([Avg Budget per Film], [Median Budget], 0)
+						VAR __value = (VAR __m = COALESCE([Avg Budget per Film], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __hi = FORMAT(_skew, "0.0", "en-US") & "x"
+						VAR __hicol = "#60A5FA"
+						VAR __text = "the median, pulled up by big productions"
+						VAR __f0 = (VAR __m = COALESCE([Median Budget], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __f1 = FORMAT(COALESCE([Big Budget Films], 0), "#,##0", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(96,165,250,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#60A5FA;box-shadow:0 0 12px #60A5FA'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>AVERAGE BUDGET PER FILM</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(96,165,250,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Median</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>$100M+ budgets</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 569e35c3-fd4b-4812-9f89-d55181c4a80c
 
-	/// Compact HTML card: average revenue per film with a bar of revenue as a multiple of average budget (5x = full).
-	measure 'KPI Avg Revenue HTML' =
-			VAR _acc = "#3B82F6"
-			VAR _rgb = "59,130,246"
-			VAR _b = COALESCE(AVERAGE(Movies[Budget]), 0)
-			VAR _r = COALESCE([Avg Revenue per Film], 0)
-			VAR _mult = DIVIDE(_r, _b, 0)
-			VAR _label = "AVERAGE REVENUE PER FILM"
-			VAR _value = "$" & FORMAT(_r / 1000000, "#,##0.0", "en-US") & "M"
-			VAR _ctx = FORMAT(_mult, "0.0", "en-US") & "x the average budget"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(_mult / 5, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: average revenue, revenue as a multiple of the average budget, median revenue and blockbuster rate.
+	measure 'KPI Avg Revenue HTML' = ```
+			
+						VAR __value = (VAR __m = COALESCE([Avg Revenue per Film], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __hi = FORMAT(COALESCE(DIVIDE([Avg Revenue per Film], [Avg Budget per Film]), 0), "0.0", "en-US") & "x"
+						VAR __hicol = "#3B82F6"
+						VAR __text = "the average budget"
+						VAR __f0 = (VAR __m = COALESCE([Median Revenue], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __f1 = FORMAT(COALESCE([Blockbuster Rate], 0), "0.0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(59,130,246,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#3B82F6;box-shadow:0 0 12px #3B82F6'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>AVERAGE REVENUE PER FILM</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(59,130,246,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Median</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Grossed $100M+</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: d9e2b99d-89c3-45a6-8afc-7e981afc6ca1
 
-	/// Compact HTML card: share of profitable films among films with known financials.
-	measure 'KPI Profit Rate HTML' =
-			VAR _acc = "#2DD4BF"
-			VAR _rgb = "45,212,191"
-			VAR _hr = COALESCE([Hit Rate], 0)
-			VAR _label = "PROFITABLE FILMS"
-			VAR _value = FORMAT(_hr, "0%", "en-US")
-			VAR _ctx = "of " & FORMAT([Movies with Financials], "#,##0", "en-US") & " films with known financials"
-			VAR _sz = 34
-			VAR _pct = ROUND(MAX(MIN(_hr, 1), 0) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: profit margin, total profit, franchise revenue share and top-10 concentration.
+	measure 'KPI Profit Rate HTML' = ```
+			
+						VAR __value = FORMAT(COALESCE([Profit Margin], 0), "0%", "en-US")
+						VAR __hi = (VAR __m = COALESCE([Total Profit], 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __hicol = "#2DD4BF"
+						VAR __text = "total profit on known budgets"
+						VAR __f0 = FORMAT(COALESCE([Franchise Revenue Share], 0), "0%", "en-US")
+						VAR __f1 = FORMAT(COALESCE([Top 10 Revenue Share], 0), "0.0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(45,212,191,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#2DD4BF;box-shadow:0 0 12px #2DD4BF'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>PROFIT MARGIN</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(45,212,191,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Franchise revenue</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Top 10 films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: e8338851-aee9-4fd3-b76f-4f2d21281841
 
-	/// Compact HTML card: genre with the most films (genres with at least 30 films) and its share of the selection.
-	measure 'KPI Most Films Genre HTML' =
-			VAR _acc = "#22D3EE"
-			VAR _rgb = "34,211,238"
-			VAR _t = TOPN(1, FILTER(VALUES(Genres[Genre]), [Movies] >= 30), [Movies], DESC)
-			VAR _name = COALESCE(MAXX(_t, Genres[Genre]), "-")
-			VAR _n = COALESCE(MAXX(_t, [Movies]), 0)
-			VAR _all = CALCULATE([Movies], REMOVEFILTERS(Genres), REMOVEFILTERS(MovieGenres))
-			VAR _share = DIVIDE(_n, _all, 0)
-			VAR _label = "GENRE WITH MOST FILMS"
-			VAR _value = _name
-			VAR _ctx = FORMAT(_n, "#,##0", "en-US") & " films  |  " & FORMAT(_share, "0%", "en-US") & " of selection"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(_share, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: largest genre (30+ films), its share of films, film count and rating vs all films.
+	measure 'KPI Most Films Genre HTML' = ```
+			
+						VAR _t = TOPN(1, FILTER(VALUES(Genres[Genre]), [Movies] >= 30), [Movies], DESC)
+						VAR _g = MAXX(_t, Genres[Genre])
+						VAR __value = COALESCE(_g, "-")
+						VAR __hi = FORMAT(COALESCE(CALCULATE([Genre Share], KEEPFILTERS(Genres[Genre] = _g)), 0), "0%", "en-US")
+						VAR __hicol = "#22D3EE"
+						VAR __text = "of all films carry this genre"
+						VAR __f0 = FORMAT(COALESCE(CALCULATE([Movies], KEEPFILTERS(Genres[Genre] = _g)), 0), "#,##0", "en-US")
+						VAR __f1 = IF(COALESCE(CALCULATE([Rating vs All Films], KEEPFILTERS(Genres[Genre] = _g)), 0) >= 0, "+", "") & FORMAT(COALESCE(CALCULATE([Rating vs All Films], KEEPFILTERS(Genres[Genre] = _g)), 0), "0.00", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(34,211,238,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#22D3EE;box-shadow:0 0 12px #22D3EE'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>GENRE WITH MOST FILMS</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(34,211,238,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Rating vs all</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 5d4b3746-044a-482e-ba73-6d3a20359fcd
 
-	/// Compact HTML card: best rated genre (genres with at least 30 films) and its weighted rating.
-	measure 'KPI Best Genre HTML' =
-			VAR _acc = "#A78BFA"
-			VAR _rgb = "167,139,250"
-			VAR _t = TOPN(1, FILTER(VALUES(Genres[Genre]), [Movies] >= 30), [Weighted Rating], DESC)
-			VAR _name = COALESCE(MAXX(_t, Genres[Genre]), "-")
-			VAR _r = COALESCE(MAXX(_t, [Weighted Rating]), 0)
-			VAR _label = "BEST RATED GENRE"
-			VAR _value = _name
-			VAR _ctx = FORMAT(_r, "0.00", "en-US") & " weighted rating"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(_r / 10, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: best rated genre (30+ films), its lead over all films, score and share rated 7+.
+	measure 'KPI Best Genre HTML' = ```
+			
+						VAR _t = TOPN(1, FILTER(VALUES(Genres[Genre]), [Movies] >= 30), [Weighted Rating], DESC)
+						VAR _g = MAXX(_t, Genres[Genre])
+						VAR _d = COALESCE(CALCULATE([Rating vs All Films], KEEPFILTERS(Genres[Genre] = _g)), 0)
+						VAR __value = COALESCE(_g, "-")
+						VAR __hi = IF(_d >= 0, "&#9650; ", "&#9660; ") & IF(_d >= 0, "+", "") & FORMAT(_d, "0.00", "en-US")
+						VAR __hicol = IF(_d >= 0, "#34D399", "#FB923C")
+						VAR __text = "rating points above all films"
+						VAR __f0 = FORMAT(COALESCE(CALCULATE([Weighted Rating], KEEPFILTERS(Genres[Genre] = _g)), 0), "0.00", "en-US")
+						VAR __f1 = FORMAT(COALESCE(CALCULATE([% Rated 7+], KEEPFILTERS(Genres[Genre] = _g)), 0), "0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(167,139,250,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#A78BFA;box-shadow:0 0 12px #A78BFA'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>BEST RATED GENRE</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(167,139,250,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Score</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Rated 7+</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 86b22a10-56fe-40ee-a3b4-c39eddd67c95
 
-	/// Compact HTML card: genre with the highest average revenue per film (genres with at least 30 films) versus the all-film average.
-	measure 'KPI Top Earner Genre HTML' =
-			VAR _acc = "#3B82F6"
-			VAR _rgb = "59,130,246"
-			VAR _t = TOPN(1, FILTER(VALUES(Genres[Genre]), [Movies] >= 30), [Avg Revenue per Film], DESC)
-			VAR _name = COALESCE(MAXX(_t, Genres[Genre]), "-")
-			VAR _r = COALESCE(MAXX(_t, [Avg Revenue per Film]), 0)
-			VAR _base = CALCULATE([Avg Revenue per Film], REMOVEFILTERS(Movies), REMOVEFILTERS(Genres), REMOVEFILTERS(MovieGenres))
-			VAR _mult = DIVIDE(_r, _base, 0)
-			VAR _label = "TOP EARNING GENRE"
-			VAR _value = _name
-			VAR _ctx = "$" & FORMAT(_r / 1000000, "#,##0", "en-US") & "M per film  |  " & FORMAT(_mult, "0.0", "en-US") & "x average"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(_mult / 3, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: genre with the highest revenue per film (30+ films), multiple of the average, revenue per film and median ROI.
+	measure 'KPI Top Earner Genre HTML' = ```
+			
+						VAR _t = TOPN(1, FILTER(VALUES(Genres[Genre]), [Movies] >= 30), [Avg Revenue per Film], DESC)
+						VAR _g = MAXX(_t, Genres[Genre])
+						VAR _mult = DIVIDE(CALCULATE([Avg Revenue per Film], KEEPFILTERS(Genres[Genre] = _g)), CALCULATE([Avg Revenue per Film], REMOVEFILTERS(Genres), REMOVEFILTERS(MovieGenres)), 0)
+						VAR __value = COALESCE(_g, "-")
+						VAR __hi = FORMAT(_mult, "0.0", "en-US") & "x"
+						VAR __hicol = "#3B82F6"
+						VAR __text = "the average revenue per film"
+						VAR __f0 = (VAR __m = COALESCE(CALCULATE([Avg Revenue per Film], KEEPFILTERS(Genres[Genre] = _g)), 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __f1 = FORMAT(COALESCE(CALCULATE([Median ROI], KEEPFILTERS(Genres[Genre] = _g)), 0), "0.0", "en-US") & "x"
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(59,130,246,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#3B82F6;box-shadow:0 0 12px #3B82F6'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>TOP EARNING GENRE</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(59,130,246,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Per film</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Median ROI</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: dbc0b785-7eb2-46d9-a913-d5ca5401d1a8
 
-	/// Compact HTML card: best rated decade (decades with at least 100 films) and its weighted rating.
-	measure 'KPI Best Decade HTML' =
-			VAR _acc = "#2DD4BF"
-			VAR _rgb = "45,212,191"
-			VAR _t = TOPN(1, FILTER(VALUES(Movies[Decade]), [Movies] >= 100), [Weighted Rating], DESC)
-			VAR _name = COALESCE(MAXX(_t, Movies[Decade]), "-")
-			VAR _r = COALESCE(MAXX(_t, [Weighted Rating]), 0)
-			VAR _label = "BEST RATED DECADE"
-			VAR _value = _name
-			VAR _ctx = FORMAT(_r, "0.00", "en-US") & " weighted rating"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(_r / 10, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: best rated decade (100+ films), its lead over all films, score and film count.
+	measure 'KPI Best Decade HTML' = ```
+			
+						VAR _t = TOPN(1, FILTER(VALUES(Movies[Decade]), [Movies] >= 100), [Weighted Rating], DESC)
+						VAR _dname = MAXX(_t, Movies[Decade])
+						VAR _r = MAXX(_t, [Weighted Rating])
+						VAR _d = COALESCE(_r - [All Films Rating], 0)
+						VAR __value = COALESCE(_dname, "-")
+						VAR __hi = IF(_d >= 0, "&#9650; ", "&#9660; ") & IF(_d >= 0, "+", "") & FORMAT(_d, "0.00", "en-US")
+						VAR __hicol = IF(_d >= 0, "#34D399", "#FB923C")
+						VAR __text = "rating points above all films"
+						VAR __f0 = FORMAT(COALESCE(_r, 0), "0.00", "en-US")
+						VAR __f1 = FORMAT(COALESCE(CALCULATE([Movies], Movies[Decade] = _dname), 0), "#,##0", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(45,212,191,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#2DD4BF;box-shadow:0 0 12px #2DD4BF'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>BEST RATED DECADE</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(45,212,191,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Score</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 12652a9b-5521-4996-8e79-9e0be792e6c5
 
-	/// Compact HTML card: highest-grossing film in the selection and its revenue.
-	measure 'KPI Top Grossing HTML' =
-			VAR _acc = "#3B82F6"
-			VAR _rgb = "59,130,246"
-			VAR _t = TOPN(1, VALUES(Movies[Title and Year]), [Total Revenue], DESC)
-			VAR _name = SUBSTITUTE(SUBSTITUTE(COALESCE(MAXX(_t, Movies[Title and Year]), "-"), "&", "&amp;"), "<", "&lt;")
-			VAR _rev = COALESCE(MAXX(_t, [Total Revenue]), 0)
-			VAR _tot = COALESCE([Total Revenue], 0)
-			VAR _label = "HIGHEST GROSSING FILM"
-			VAR _value = _name
-			VAR _ctx = "$" & FORMAT(_rev / 1000000000, "#,##0.00", "en-US") & "bn  |  " & FORMAT(DIVIDE(_rev, _tot, 0), "0.0%", "en-US") & " of selection revenue"
-			VAR _sz = 24
-			VAR _pct = ROUND(MIN(DIVIDE(_rev, _tot, 0) * 10, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.25;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: highest-grossing film, its revenue and ROI, and its share of the selection revenue.
+	measure 'KPI Top Grossing HTML' = ```
+			
+						VAR _t = TOPN(1, VALUES(Movies[Title and Year]), [Total Revenue], DESC)
+						VAR _f = MAXX(_t, Movies[Title and Year])
+						VAR __value = SUBSTITUTE(SUBSTITUTE(COALESCE(_f, "-"), "&", "&amp;"), "<", "&lt;")
+						VAR __hi = (VAR __m = COALESCE(CALCULATE([Total Revenue], Movies[Title and Year] = _f), 0) RETURN IF(__m >= 1000000000, "$" & FORMAT(__m / 1000000000, "#,##0.0", "en-US") & "bn", IF(__m >= 1000000, "$" & FORMAT(__m / 1000000, "#,##0.0", "en-US") & "M", "$" & FORMAT(__m / 1000, "#,##0", "en-US") & "K")))
+						VAR __hicol = "#3B82F6"
+						VAR __text = "worldwide revenue"
+						VAR __f0 = FORMAT(COALESCE(CALCULATE([ROI], Movies[Title and Year] = _f), 0), "0.0", "en-US") & "x budget"
+						VAR __f1 = FORMAT(COALESCE(DIVIDE(CALCULATE([Total Revenue], Movies[Title and Year] = _f), [Total Revenue]), 0), "0.0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(59,130,246,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#3B82F6;box-shadow:0 0 12px #3B82F6'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>HIGHEST GROSSING FILM</div>" &
+						"<div style='margin-top:4px;font-size:30px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(59,130,246,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>ROI</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Share</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 65ab4003-d9b4-4732-a549-90700ecacd27
 
-	/// Compact HTML card: highest weighted-rating film in the selection with its score and vote count.
-	measure 'KPI Top Rated HTML' =
-			VAR _acc = "#A78BFA"
-			VAR _rgb = "167,139,250"
-			VAR _t = TOPN(1, VALUES(Movies[Title and Year]), [Weighted Rating], DESC)
-			VAR _name = SUBSTITUTE(SUBSTITUTE(COALESCE(MAXX(_t, Movies[Title and Year]), "-"), "&", "&amp;"), "<", "&lt;")
-			VAR _r = COALESCE(MAXX(_t, [Weighted Rating]), 0)
-			VAR _votes = COALESCE(MAXX(_t, [Total Votes]), 0)
-			VAR _label = "HIGHEST RATED FILM"
-			VAR _value = _name
-			VAR _ctx = FORMAT(_r, "0.00", "en-US") & " score  |  " & FORMAT(_votes, "#,##0", "en-US") & " votes"
-			VAR _sz = 24
-			VAR _pct = ROUND(MIN(_r / 10, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.25;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: highest weighted-rating film, its score, votes and lead over all films.
+	measure 'KPI Top Rated HTML' = ```
+			
+						VAR _t = TOPN(1, VALUES(Movies[Title and Year]), [Weighted Rating], DESC)
+						VAR _f = MAXX(_t, Movies[Title and Year])
+						VAR __value = SUBSTITUTE(SUBSTITUTE(COALESCE(_f, "-"), "&", "&amp;"), "<", "&lt;")
+						VAR __hi = FORMAT(COALESCE(CALCULATE([Weighted Rating], Movies[Title and Year] = _f), 0), "0.00", "en-US")
+						VAR __hicol = "#A78BFA"
+						VAR __text = "vote-weighted score out of 10"
+						VAR __f0 = FORMAT(COALESCE(CALCULATE([Total Votes], Movies[Title and Year] = _f), 0), "#,##0", "en-US")
+						VAR __f1 = IF(COALESCE(CALCULATE([Rating vs All Films], Movies[Title and Year] = _f), 0) >= 0, "+", "") & FORMAT(COALESCE(CALCULATE([Rating vs All Films], Movies[Title and Year] = _f), 0), "0.00", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(167,139,250,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#A78BFA;box-shadow:0 0 12px #A78BFA'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>HIGHEST RATED FILM</div>" &
+						"<div style='margin-top:4px;font-size:30px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(167,139,250,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Votes</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>vs all films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: ac359325-4084-4d2d-90c1-d02f26ab6636
 
-	/// Compact HTML card: most-voted film in the selection and its share of all votes.
-	measure 'KPI Most Voted HTML' =
-			VAR _acc = "#22D3EE"
-			VAR _rgb = "34,211,238"
-			VAR _t = TOPN(1, VALUES(Movies[Title and Year]), [Total Votes], DESC)
-			VAR _name = SUBSTITUTE(SUBSTITUTE(COALESCE(MAXX(_t, Movies[Title and Year]), "-"), "&", "&amp;"), "<", "&lt;")
-			VAR _v = COALESCE(MAXX(_t, [Total Votes]), 0)
-			VAR _tot = COALESCE([Total Votes], 0)
-			VAR _label = "MOST VOTED FILM"
-			VAR _value = _name
-			VAR _ctx = FORMAT(_v, "#,##0", "en-US") & " votes  |  " & FORMAT(DIVIDE(_v, _tot, 0), "0.0%", "en-US") & " of all votes"
-			VAR _sz = 24
-			VAR _pct = ROUND(MIN(DIVIDE(_v, _tot, 0) * 20, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.16) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.25;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: most-voted film, its votes, rating and share of all votes.
+	measure 'KPI Most Voted HTML' = ```
+			
+						VAR _t = TOPN(1, VALUES(Movies[Title and Year]), [Total Votes], DESC)
+						VAR _f = MAXX(_t, Movies[Title and Year])
+						VAR __value = SUBSTITUTE(SUBSTITUTE(COALESCE(_f, "-"), "&", "&amp;"), "<", "&lt;")
+						VAR __hi = FORMAT(COALESCE(CALCULATE([Total Votes], Movies[Title and Year] = _f), 0), "#,##0", "en-US")
+						VAR __hicol = "#22D3EE"
+						VAR __text = "votes on TMDB"
+						VAR __f0 = FORMAT(COALESCE(CALCULATE([Weighted Rating], Movies[Title and Year] = _f), 0), "0.00", "en-US")
+						VAR __f1 = FORMAT(COALESCE(DIVIDE(CALCULATE([Total Votes], Movies[Title and Year] = _f), [Total Votes]), 0), "0.0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(34,211,238,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#22D3EE;box-shadow:0 0 12px #22D3EE'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>MOST VOTED FILM</div>" &
+						"<div style='margin-top:4px;font-size:30px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(34,211,238,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Rating</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Share of votes</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: 3b6c7ffd-0cc6-4dc7-bc24-178c6be2b96f
 
-	/// Compact HTML card: number of films in the selection with the share that has enough votes to be rated.
-	measure 'KPI Films Shown HTML' =
-			VAR _acc = "#4ADE80"
-			VAR _rgb = "74,222,128"
-			VAR _n = COALESCE([Movies], 0)
-			VAR _rated = COALESCE(DIVIDE([Rated Movies], _n, 0), 0)
-			VAR _label = "FILMS IN SELECTION"
-			VAR _value = FORMAT(_n, "#,##0", "en-US")
-			VAR _ctx = FORMAT(_rated, "0%", "en-US") & " have 10+ votes and a reliable rating"
-			VAR _sz = 34
-			VAR _pct = ROUND(MIN(_rated, 1) * 100, 0)
-			RETURN
-			"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;padding:0 12px 0 22px;border-radius:12px;background:linear-gradient(135deg,rgba(" & _rgb & ",.14) 0%,rgba(11,23,48,0) 65%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden'><div style='position:absolute;left:0;top:16%;height:68%;width:5px;border-radius:0 4px 4px 0;background:" & _acc & ";box-shadow:0 0 12px " & _acc & "'></div><div style='flex:1;min-width:0'><div style='font-size:12px;letter-spacing:2px;color:#9DB4D8'>" & _label & "</div><div style='font-size:" & _sz & "px;line-height:1.15;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(" & _rgb & ",.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _value & "</div><div style='font-size:13px;color:#9DB4D8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & _ctx & "</div><div style='margin-top:6px;height:5px;border-radius:3px;background:#1F3A6B'><div style='height:5px;border-radius:3px;width:" & _pct & "%;background:" & _acc & ";box-shadow:0 0 8px " & _acc & "'></div></div></div></div>"
+	/// KPI card: film count, share with a reliable rating (10+ votes), average votes and franchise share.
+	measure 'KPI Films Shown HTML' = ```
+			
+						VAR __value = FORMAT(COALESCE([Movies], 0), "#,##0", "en-US")
+						VAR __hi = FORMAT(COALESCE(DIVIDE([Rated Movies], [Movies]), 0), "0%", "en-US")
+						VAR __hicol = "#4ADE80"
+						VAR __text = "have 10+ votes and a reliable rating"
+						VAR __f0 = FORMAT(COALESCE([Avg Votes per Film], 0), "#,##0", "en-US")
+						VAR __f1 = FORMAT(COALESCE([Franchise Film Share], 0), "0.0%", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;padding:26px 18px 16px 26px;border-radius:12px;background:linear-gradient(150deg,rgba(74,222,128,.13) 0%,rgba(11,23,48,0) 55%);font-family:Segoe UI,sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start'>" &
+						"<div style='position:absolute;left:0;top:18%;height:64%;width:4px;border-radius:0 4px 4px 0;background:#4ADE80;box-shadow:0 0 12px #4ADE80'></div>" &
+						"<div style='font-size:12px;letter-spacing:2px;color:#9DB4D8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>FILMS IN SELECTION</div>" &
+						"<div style='margin-top:4px;font-size:48px;line-height:1.08;font-weight:700;color:#EAF2FF;font-family:Bahnschrift,Segoe UI,sans-serif;text-shadow:0 0 16px rgba(74,222,128,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" & __value & "</div>" &
+						"<div style='margin-top:8px;font-size:15px;line-height:1.35;color:#C9D7EE;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden'><span style='color:" & __hicol & ";font-weight:700'>" & __hi & "</span> " & __text & "</div>" &
+						"<div style='margin-top:12px;padding-top:10px;border-top:1px solid rgba(157,180,216,.16);display:flex;flex-wrap:wrap;column-gap:18px;row-gap:2px;font-size:13px'>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Avg votes</span> <span style='color:#EAF2FF;font-weight:600'>" & __f0 & "</span></span>" &
+							"<span style='white-space:nowrap'><span style='color:#7F97BD'>Franchise films</span> <span style='color:#EAF2FF;font-weight:600'>" & __f1 & "</span></span>" &
+						"</div>" &
+						"</div>"
+			```
 		displayFolder: KPI HTML
 		lineageTag: a81e268f-033f-430b-82af-0889b2c867dc
+
+	/// Median budget of films with a known budget; not skewed by blockbusters like the average.
+	measure 'Median Budget' = MEDIAN(Movies[Budget])
+		formatString: $#,0
+		displayFolder: Financials
+		lineageTag: a4503556-fee1-4c48-b40f-12f0a8cbdca2
+
+	/// Median worldwide revenue of films with a known revenue.
+	measure 'Median Revenue' = MEDIAN(Movies[Revenue])
+		formatString: $#,0
+		displayFolder: Financials
+		lineageTag: a360d639-c1bc-478d-a3dd-9a705ab3373a
+
+	/// Average budget of films with a known budget.
+	measure 'Avg Budget per Film' = AVERAGE(Movies[Budget])
+		formatString: $#,0
+		displayFolder: Financials
+		lineageTag: 1f30133a-6bd8-4442-8a32-74e81f23c181
+
+	/// Total profit as a share of revenue, for films with both budget and revenue known.
+	measure 'Profit Margin' = DIVIDE([Total Profit], CALCULATE(SUM(Movies[Revenue]), Movies[Has Financials] = "Yes"))
+		formatString: 0%
+		displayFolder: Financials
+		lineageTag: 0a380375-48a8-4c33-9c4b-59932031bec0
+
+	/// Number of films that grossed $100M or more.
+	measure Blockbusters = CALCULATE(COUNTROWS(Movies), Movies[Revenue] >= 100000000)
+		formatString: #,0
+		displayFolder: Financials
+		lineageTag: a5caadea-b09d-4b89-9481-9b20e8a901a7
+
+	/// Share of films with a known revenue that grossed $100M or more.
+	measure 'Blockbuster Rate' = DIVIDE([Blockbusters], CALCULATE(COUNTROWS(Movies), NOT ISBLANK(Movies[Revenue])))
+		formatString: 0.0%
+		displayFolder: Financials
+		lineageTag: 44636e55-7cc8-4ed8-b273-df7ffe4837c6
+
+	/// Number of films with a budget of $100M or more.
+	measure 'Big Budget Films' = CALCULATE(COUNTROWS(Movies), Movies[Budget] >= 100000000)
+		formatString: #,0
+		displayFolder: Financials
+		lineageTag: ddb4a696-b81b-4b6c-a0cc-e360a5826037
+
+	/// Share of revenue earned by films that belong to a collection (franchise).
+	measure 'Franchise Revenue Share' = DIVIDE(CALCULATE([Total Revenue], Movies[Collection Name] <> ""), [Total Revenue])
+		formatString: 0%
+		displayFolder: Financials
+		lineageTag: 7b92c3e9-7ead-4c68-9d5f-0efaa38a674a
+
+	/// Share of films that belong to a collection (franchise).
+	measure 'Franchise Film Share' = DIVIDE(CALCULATE([Movies], Movies[Collection Name] <> ""), [Movies])
+		formatString: 0%
+		displayFolder: Counts
+		lineageTag: c4610d8d-ec40-49f9-a363-7b6a04245bf1
+
+	/// Share of revenue earned by the ten highest-grossing films of the selection (concentration).
+	measure 'Top 10 Revenue Share' = DIVIDE(SUMX(TOPN(10, VALUES(Movies[Movie ID]), CALCULATE(SUM(Movies[Revenue]))), CALCULATE(SUM(Movies[Revenue]))), [Total Revenue])
+		formatString: 0.0%
+		displayFolder: Financials
+		lineageTag: 7c24fe92-5af8-40d6-a0aa-86fae680803b
+
+	/// Average number of films per release year in the selection.
+	measure 'Films per Year' = DIVIDE([Movies], DISTINCTCOUNT(Movies[Release Year]))
+		formatString: #,0
+		displayFolder: Counts
+		lineageTag: 49695833-e08c-44ef-9e77-95e9eaf42c3e
+
+	/// Release year with the most films in the selection.
+	measure 'Peak Year' = MAXX(TOPN(1, VALUES(Movies[Release Year]), [Movies], DESC, Movies[Release Year], DESC), Movies[Release Year])
+		formatString: 0
+		displayFolder: Counts
+		lineageTag: 345a02f4-41f8-4dc8-8c5f-eea1e7b9fe50
+
+	/// Films released in the peak year.
+	measure 'Peak Year Films' = VAR _y = [Peak Year] RETURN CALCULATE([Movies], Movies[Release Year] = _y)
+		formatString: #,0
+		displayFolder: Counts
+		lineageTag: 5e860679-dff0-40e1-b63e-5a38ab5831a9
+
+	/// Films per year in 2010-2016 divided by films per year in the 1980s (2017 is partial and left out).
+	measure 'Output Growth vs 1980s' = DIVIDE(CALCULATE([Movies], REMOVEFILTERS(Movies[Decade]), Movies[Release Year] >= 2010, Movies[Release Year] <= 2016) / 7, CALCULATE([Movies], REMOVEFILTERS(Movies[Decade]), Movies[Decade] = "1980s") / 10)
+		formatString: 0.0"x"
+		displayFolder: Counts
+		lineageTag: 7ba90aaa-36d0-4f9a-a192-41720597fb34
+
+	/// Weighted rating of the 2010s minus the 1980s; negative means ratings slipped.
+	measure 'Rating Change vs 1980s' = CALCULATE([Weighted Rating], REMOVEFILTERS(Movies[Decade]), Movies[Decade] = "2010s") - CALCULATE([Weighted Rating], REMOVEFILTERS(Movies[Decade]), Movies[Decade] = "1980s")
+		formatString: +0.00;-0.00;0.00
+		displayFolder: Ratings
+		lineageTag: 3374d7a0-723c-40be-9437-3af8dfc99f1a
+
+	/// Median runtime in minutes.
+	measure 'Median Runtime' = MEDIAN(Movies[Runtime])
+		formatString: 0
+		displayFolder: Runtime
+		lineageTag: 82dc85d2-6782-4318-b56a-840bda3235c3
+
+	/// Share of films with a known runtime longer than 120 minutes.
+	measure '% Over 2 Hours' = DIVIDE(CALCULATE(COUNTROWS(Movies), Movies[Runtime] > 120), CALCULATE(COUNTROWS(Movies), NOT ISBLANK(Movies[Runtime])))
+		formatString: 0%
+		displayFolder: Runtime
+		lineageTag: b9ea14f3-4aea-4d94-beba-07e0ec0691dc
+
+	/// Average number of TMDB votes per film.
+	measure 'Avg Votes per Film' = DIVIDE([Total Votes], [Movies])
+		formatString: #,0
+		displayFolder: Ratings
+		lineageTag: 34e723a5-6270-4806-9c72-f00e279ae685
+
+	/// Films of the genre as a share of all films in the selection (a film can have several genres).
+	measure 'Genre Share' = DIVIDE([Movies], CALCULATE([Movies], REMOVEFILTERS(Genres), REMOVEFILTERS(MovieGenres)))
+		formatString: 0.0%
+		displayFolder: Counts
+		lineageTag: e230f4b9-c76e-4b5a-8bcd-90e6c7f02c6b
+
+	/// Five-year trailing average of films released per year (use with Release Year on the axis).
+	measure 'Films 5y Avg' = VAR _y = MAX(Movies[Release Year]) RETURN IF(ISINSCOPE(Movies[Release Year]), DIVIDE(CALCULATE([Movies], REMOVEFILTERS(Movies[Release Year]), Movies[Release Year] > _y - 5, Movies[Release Year] <= _y), 5))
+		formatString: #,0
+		displayFolder: Counts
+		lineageTag: 0989cb69-d6e7-4ac8-9923-9314e800e1ab
+
+	/// Films in the language as a share of all films in the selection.
+	measure 'Language Share' = DIVIDE([Movies], CALCULATE([Movies], REMOVEFILTERS(Movies[Language])))
+		formatString: 0.0%
+		displayFolder: Counts
+		lineageTag: 01eb052c-79ec-4416-9954-c4a617978342
+
+	/// Films from the primary production country as a share of all films in the selection.
+	measure 'Country Share' = DIVIDE([Movies], CALCULATE([Movies], REMOVEFILTERS(Movies[Primary Country])))
+		formatString: 0.0%
+		displayFolder: Counts
+		lineageTag: 926d347c-d156-4511-92d0-dceb706087f6
+
+	/// Median ROI of the selection ignoring the genre on the axis; the reference line for genre ROI charts.
+	measure 'Median ROI All Genres' = CALCULATE([Median ROI], REMOVEFILTERS(Genres), REMOVEFILTERS(MovieGenres))
+		formatString: 0.0"x"
+		displayFolder: Reference
+		lineageTag: 28e50d04-1a1c-4930-bb6f-dee4b3e33bcf
+
+	/// Total profit in millions of USD, for axes.
+	measure 'Profit (USD M)' = DIVIDE([Total Profit], 1000000)
+		formatString: $#,0.#"M"
+		displayFolder: Financials
+		lineageTag: a8330068-0e1a-475b-bc82-328a3fc29deb
+
+	/// Header chips listing the fields filtered by slicers (Decade, Genre, Language, Budget tier) and the number of films shown.
+	measure 'Filter Summary HTML' = ```
+			
+						VAR _nDecade = COUNTROWS(VALUES(Movies[Decade]))
+						VAR _vDecade = IF(ISFILTERED(Movies[Decade]),
+							"<span style='display:inline-block;margin-left:8px;padding:5px 12px;border-radius:14px;background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.4);white-space:nowrap'><span style='color:#7DE3F4'>Decade</span> " &
+							SUBSTITUTE(SUBSTITUTE(IF(_nDecade <= 2, CONCATENATEX(VALUES(Movies[Decade]), Movies[Decade], ", ", CALCULATE(MIN(Movies[Decade Sort])), ASC), CONCATENATEX(TOPN(2, VALUES(Movies[Decade]), CALCULATE(MIN(Movies[Decade Sort])), ASC), Movies[Decade], ", ", CALCULATE(MIN(Movies[Decade Sort])), ASC) & " +" & (_nDecade - 2)), "&", "&amp;"), "<", "&lt;") & "</span>")
+						VAR _nGenre = COUNTROWS(VALUES(Genres[Genre]))
+						VAR _vGenre = IF(ISFILTERED(Genres[Genre]),
+							"<span style='display:inline-block;margin-left:8px;padding:5px 12px;border-radius:14px;background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.4);white-space:nowrap'><span style='color:#7DE3F4'>Genre</span> " &
+							SUBSTITUTE(SUBSTITUTE(IF(_nGenre <= 2, CONCATENATEX(VALUES(Genres[Genre]), Genres[Genre], ", ", Genres[Genre], ASC), CONCATENATEX(TOPN(2, VALUES(Genres[Genre]), Genres[Genre], ASC), Genres[Genre], ", ", Genres[Genre], ASC) & " +" & (_nGenre - 2)), "&", "&amp;"), "<", "&lt;") & "</span>")
+						VAR _nLanguage = COUNTROWS(VALUES(Movies[Language]))
+						VAR _vLanguage = IF(ISFILTERED(Movies[Language]),
+							"<span style='display:inline-block;margin-left:8px;padding:5px 12px;border-radius:14px;background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.4);white-space:nowrap'><span style='color:#7DE3F4'>Language</span> " &
+							SUBSTITUTE(SUBSTITUTE(IF(_nLanguage <= 2, CONCATENATEX(VALUES(Movies[Language]), Movies[Language], ", ", Movies[Language], ASC), CONCATENATEX(TOPN(2, VALUES(Movies[Language]), Movies[Language], ASC), Movies[Language], ", ", Movies[Language], ASC) & " +" & (_nLanguage - 2)), "&", "&amp;"), "<", "&lt;") & "</span>")
+						VAR _nTier = COUNTROWS(VALUES(Movies[Budget Tier]))
+						VAR _vTier = IF(ISFILTERED(Movies[Budget Tier]),
+							"<span style='display:inline-block;margin-left:8px;padding:5px 12px;border-radius:14px;background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.4);white-space:nowrap'><span style='color:#7DE3F4'>Tier</span> " &
+							SUBSTITUTE(SUBSTITUTE(IF(_nTier <= 2, CONCATENATEX(VALUES(Movies[Budget Tier]), Movies[Budget Tier], ", ", CALCULATE(MIN(Movies[Budget Tier Sort])), ASC), CONCATENATEX(TOPN(2, VALUES(Movies[Budget Tier]), CALCULATE(MIN(Movies[Budget Tier Sort])), ASC), Movies[Budget Tier], ", ", CALCULATE(MIN(Movies[Budget Tier Sort])), ASC) & " +" & (_nTier - 2)), "&", "&amp;"), "<", "&lt;") & "</span>")
+						VAR _chips = _vDecade & _vGenre & _vLanguage & _vTier
+						VAR _films = FORMAT(COALESCE([Movies], 0), "#,##0", "en-US")
+						RETURN
+						"<div style='box-sizing:border-box;height:100vh;width:100%;display:flex;align-items:center;justify-content:flex-end;font-family:Segoe UI,sans-serif;font-size:13px;color:#EAF2FF;overflow:hidden'>" &
+						IF(_chips = "", "<span style='color:#7F97BD'>No filters applied</span>", "<span style='color:#7F97BD'>Filtered by</span>" & _chips) &
+						"<span style='margin-left:14px;color:#7F97BD;white-space:nowrap'><span style='color:#EAF2FF;font-weight:600'>" & _films & "</span> films</span>" &
+						"</div>"
+			```
+		displayFolder: KPI HTML
+		lineageTag: 24da9067-8ca9-44cf-84ba-b87a8de4a5ae
 
 	column Placeholder
 		dataType: int64

@@ -3,17 +3,17 @@
   "name": "7e1898081b563dbd2ceb",
   "position": {
     "x": 816,
-    "y": 280,
+    "y": 380,
     "z": 12000,
-    "height": 416,
+    "height": 360,
     "width": 1072,
     "tabOrder": 12000
   },
   "visual": {
-    "visualType": "scatterChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,12 +28,8 @@
               },
               "queryRef": "Movies.Title and Year",
               "nativeQueryRef": "Title and Year",
-              "active": true
-            }
-          ]
-        },
-        "X": {
-          "projections": [
+              "displayName": "Film"
+            },
             {
               "field": {
                 "Measure": {
@@ -47,12 +43,8 @@
               },
               "queryRef": "_Measures.Total Votes",
               "nativeQueryRef": "Total Votes",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Votes"
+            },
             {
               "field": {
                 "Measure": {
@@ -65,213 +57,131 @@
                 }
               },
               "queryRef": "_Measures.Weighted Rating",
-              "nativeQueryRef": "Weighted Rating"
+              "nativeQueryRef": "Weighted Rating",
+              "displayName": "Rating"
             }
           ]
         }
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#A78BFA'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "bubbles": [
-        {
-          "properties": {
-            "bubbleSize": {
+            "provider": {
               "expr": {
                 "Literal": {
-                  "Value": "1L"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "'vegaLite'"
                 }
               }
             },
-            "logAxisScale": {
+            "jsonSpec": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"transform\":[{\"filter\":\"datum.Votes > 0\"},{\"window\":[{\"op\":\"row_number\",\"as\":\"rv\"}],\"sort\":[{\"field\":\"Votes\",\"order\":\"descending\"}]},{\"window\":[{\"op\":\"row_number\",\"as\":\"rr\"}],\"sort\":[{\"field\":\"Rating\",\"order\":\"descending\"}]}],\"encoding\":{\"x\":{\"field\":\"Votes\",\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"nice\":false,\"padding\":12},\"axis\":{\"title\":\"Votes (log)\",\"format\":\"~s\",\"values\":[1000,2000,5000,10000,15000]}},\"y\":{\"field\":\"Rating\",\"type\":\"quantitative\",\"scale\":{\"zero\":false},\"axis\":{\"title\":\"Weighted rating\",\"format\":\".1f\",\"tickCount\":5}}},\"layer\":[{\"mark\":{\"type\":\"circle\",\"size\":42,\"opacity\":0.7},\"encoding\":{\"color\":{\"field\":\"Rating\",\"type\":\"quantitative\",\"scale\":{\"range\":[\"#3B2F7A\",\"#A78BFA\",\"#E9D5FF\"]},\"legend\":null},\"tooltip\":[{\"field\":\"Film\",\"title\":\"Film\",\"type\":\"nominal\"},{\"field\":\"Votes\",\"title\":\"Votes\",\"type\":\"quantitative\",\"format\":\",.0f\"},{\"field\":\"Rating\",\"title\":\"Weighted rating\",\"type\":\"quantitative\",\"format\":\".2f\"}]}},{\"transform\":[{\"regression\":\"Rating\",\"on\":\"Votes\",\"method\":\"log\"}],\"mark\":{\"type\":\"line\",\"strokeDash\":[6,4],\"color\":\"#9DB4D8\",\"strokeWidth\":1.5}},{\"transform\":[{\"filter\":\"datum.rv <= 3 || datum.rr <= 2\"}],\"mark\":{\"type\":\"circle\",\"size\":70,\"color\":\"#2DD4BF\",\"opacity\":1}},{\"transform\":[{\"filter\":\"datum.rv <= 3 || datum.rr <= 2\"}],\"mark\":{\"type\":\"text\",\"align\":\"right\",\"dx\":-9,\"fontSize\":11,\"color\":\"#EAF2FF\",\"limit\":220,\"dy\":{\"expr\":\"datum.rv == 1 ? 14 : datum.rv == 2 ? -10 : datum.rv == 3 ? 2 : datum.rr == 1 ? -8 : 8\"}},\"encoding\":{\"text\":{\"field\":\"Film\"}}}]}'"
                 }
               }
             },
-            "fontSize": {
+            "jsonConfig": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
                 }
               }
             },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#9DB4D8'"
-                    }
-                  }
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
                 }
               }
             },
-            "showAxisTitle": {
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "titleText": {
+            "enableContextMenu": {
               "expr": {
                 "Literal": {
-                  "Value": "'Votes'"
+                  "Value": "true"
                 }
               }
             },
-            "titleColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
-                }
-              }
-            },
-            "titleFontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "gridlineShow": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
                   "Value": "false"
                 }
               }
             },
-            "gridlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1A2E55'"
-                    }
-                  }
+            "enableHighlight": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'6.4.3'"
                 }
               }
             }
           }
         }
       ],
-      "valueAxis": [
+      "stateManagement": [
         {
           "properties": {
-            "labelDisplayUnits": {
+            "viewportHeight": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "260D"
                 }
               }
             },
-            "logAxisScale": {
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "1042D"
+                }
+              }
+            },
+            "supportFieldConfiguration": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"Film\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"Votes\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"Rating\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
+                }
+              }
+            },
+            "denebMetaVersion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
               "expr": {
                 "Literal": {
                   "Value": "false"
                 }
               }
-            },
-            "fontSize": {
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#9DB4D8'"
-                    }
-                  }
-                }
-              }
-            },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "titleText": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Weighted rating'"
-                }
-              }
-            },
-            "titleColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
-                }
-              }
-            },
-            "titleFontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "gridlineShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "gridlineColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1A2E55'"
-                    }
-                  }
+                  "Value": "'2.0.0.0'"
                 }
               }
             }
@@ -345,7 +255,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Scatter chart of vote count against weighted rating for the thousand most-voted films'"
+                  "Value": "'Scatter of the thousand most-voted films by votes and weighted rating with a trend line and labels for standout titles'"
                 }
               }
             }
@@ -358,7 +268,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'x: votes (log) · y: weighted rating · dashed: log trend · labelled: most voted and best rated'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -466,7 +408,8 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   },
   "filterConfig": {
     "filters": [

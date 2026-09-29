@@ -1,19 +1,19 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "8c3c0e38474f2846aceb",
   "position": {
-    "x": 664,
-    "y": 280,
+    "x": 616,
+    "y": 380,
     "z": 11000,
-    "height": 768,
-    "width": 592,
+    "height": 668,
+    "width": 640,
     "tabOrder": 11000
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
     "query": {
       "queryState": {
-        "Category": {
+        "dataset": {
           "projections": [
             {
               "field": {
@@ -28,12 +28,38 @@
               },
               "queryRef": "Genres.Genre",
               "nativeQueryRef": "Genre",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
+              "displayName": "Genre"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Movies"
+                }
+              },
+              "queryRef": "_Measures.Movies",
+              "nativeQueryRef": "Movies",
+              "displayName": "Films"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Weighted Rating"
+                }
+              },
+              "queryRef": "_Measures.Weighted Rating",
+              "nativeQueryRef": "Weighted Rating",
+              "displayName": "Rating"
+            },
             {
               "field": {
                 "Measure": {
@@ -46,118 +72,85 @@
                 }
               },
               "queryRef": "_Measures.Avg Revenue per Film",
-              "nativeQueryRef": "Avg Revenue per Film"
+              "nativeQueryRef": "Avg Revenue per Film",
+              "displayName": "AvgRevenue"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "All Films Rating"
+                }
+              },
+              "queryRef": "_Measures.All Films Rating",
+              "nativeQueryRef": "All Films Rating",
+              "displayName": "AllRating"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "Avg Revenue per Film"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
-      "dataPoint": [
+      "vega": [
         {
           "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#3B82F6'"
-                    }
-                  }
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
                 }
               }
-            }
-          }
-        }
-      ],
-      "labels": [
-        {
-          "properties": {
-            "show": {
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\",\"data\":{\"name\":\"dataset\"},\"transform\":[{\"joinaggregate\":[{\"op\":\"median\",\"field\":\"Films\",\"as\":\"MedFilms\"}]}],\"layer\":[{\"mark\":{\"type\":\"rule\",\"strokeDash\":[4,4],\"color\":\"#9DB4D8\",\"opacity\":0.6},\"encoding\":{\"x\":{\"field\":\"MedFilms\",\"type\":\"quantitative\"}}},{\"mark\":{\"type\":\"rule\",\"strokeDash\":[4,4],\"color\":\"#9DB4D8\",\"opacity\":0.6},\"encoding\":{\"y\":{\"field\":\"AllRating\",\"type\":\"quantitative\"}}},{\"data\":{\"values\":[{\"t\":\"NICHE · RATED HIGH\"}]},\"mark\":{\"type\":\"text\",\"align\":\"left\",\"baseline\":\"top\",\"x\":4,\"y\":2,\"fontSize\":10,\"color\":\"#6C84AB\"},\"encoding\":{\"text\":{\"field\":\"t\"}}},{\"data\":{\"values\":[{\"t\":\"BIG · RATED HIGH\"}]},\"mark\":{\"type\":\"text\",\"align\":\"right\",\"baseline\":\"top\",\"x\":{\"expr\":\"width - 4\"},\"y\":2,\"fontSize\":10,\"color\":\"#6C84AB\"},\"encoding\":{\"text\":{\"field\":\"t\"}}},{\"data\":{\"values\":[{\"t\":\"NICHE · RATED LOW\"}]},\"mark\":{\"type\":\"text\",\"align\":\"left\",\"baseline\":\"bottom\",\"x\":4,\"y\":{\"expr\":\"height - 2\"},\"fontSize\":10,\"color\":\"#6C84AB\"},\"encoding\":{\"text\":{\"field\":\"t\"}}},{\"data\":{\"values\":[{\"t\":\"BIG · RATED LOW\"}]},\"mark\":{\"type\":\"text\",\"align\":\"right\",\"baseline\":\"bottom\",\"x\":{\"expr\":\"width - 4\"},\"y\":{\"expr\":\"height - 2\"},\"fontSize\":10,\"color\":\"#6C84AB\"},\"encoding\":{\"text\":{\"field\":\"t\"}}},{\"mark\":{\"type\":\"circle\",\"opacity\":0.8,\"stroke\":\"#EAF2FF\",\"strokeWidth\":0.6,\"strokeOpacity\":0.5},\"encoding\":{\"x\":{\"field\":\"Films\",\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"padding\":30},\"axis\":{\"title\":\"Films (log)\",\"format\":\"~s\",\"values\":[500,1000,2000,5000,10000,20000]}},\"y\":{\"field\":\"Rating\",\"type\":\"quantitative\",\"scale\":{\"zero\":false,\"padding\":30},\"axis\":{\"title\":\"Weighted rating\",\"format\":\".1f\"}},\"size\":{\"field\":\"AvgRevenue\",\"type\":\"quantitative\",\"scale\":{\"range\":[40,900]},\"legend\":null},\"color\":{\"field\":\"AvgRevenue\",\"type\":\"quantitative\",\"scale\":{\"range\":[\"#1E3A8A\",\"#3B82F6\",\"#93C5FD\"]},\"legend\":null},\"tooltip\":[{\"field\":\"Genre\",\"title\":\"Genre\",\"type\":\"nominal\"},{\"field\":\"Films\",\"title\":\"Films\",\"type\":\"quantitative\",\"format\":\",.0f\"},{\"field\":\"Rating\",\"title\":\"Weighted rating\",\"type\":\"quantitative\",\"format\":\".2f\"},{\"field\":\"AvgRevenue\",\"title\":\"Avg revenue per film\",\"type\":\"quantitative\",\"format\":\"$,.0f\"}]}},{\"mark\":{\"type\":\"text\",\"fontSize\":10.5,\"color\":\"#EAF2FF\",\"dy\":-12},\"encoding\":{\"x\":{\"field\":\"Films\",\"type\":\"quantitative\",\"scale\":{\"type\":\"log\",\"padding\":30},\"axis\":{\"title\":\"Films (log)\",\"format\":\"~s\",\"values\":[500,1000,2000,5000,10000,20000]}},\"y\":{\"field\":\"Rating\",\"type\":\"quantitative\",\"scale\":{\"zero\":false,\"padding\":30},\"axis\":{\"title\":\"Weighted rating\",\"format\":\".1f\"}},\"text\":{\"field\":\"Genre\"}}}]}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"background\":\"transparent\",\"view\":{\"stroke\":\"transparent\"},\"font\":\"Segoe UI\",\"autosize\":{\"type\":\"fit\",\"contains\":\"padding\"},\"padding\":{\"left\":4,\"right\":10,\"top\":8,\"bottom\":4},\"axis\":{\"domain\":false,\"ticks\":false,\"grid\":true,\"gridColor\":\"#1A2E55\",\"gridDash\":[2,4],\"labelColor\":\"#9DB4D8\",\"labelFont\":\"Segoe UI\",\"labelFontSize\":12,\"labelPadding\":6,\"titleColor\":\"#6C84AB\",\"titleFont\":\"Segoe UI\",\"titleFontSize\":11,\"titleFontWeight\":\"normal\",\"titlePadding\":8},\"axisBand\":{\"grid\":false},\"legend\":{\"labelColor\":\"#9DB4D8\",\"titleColor\":\"#6C84AB\",\"labelFontSize\":12,\"symbolType\":\"circle\",\"orient\":\"top\",\"direction\":\"horizontal\",\"title\":null},\"text\":{\"color\":\"#EAF2FF\",\"font\":\"Segoe UI\",\"fontSize\":12},\"rule\":{\"color\":\"#9DB4D8\"},\"line\":{\"strokeWidth\":2.5}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
             },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             },
-            "fontSize": {
+            "enableSelection": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
+                  "Value": "false"
                 }
               }
             },
-            "fontFamily": {
+            "enableHighlight": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segoe UI'"
-                }
-              }
-            },
-            "labelDisplayUnits": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "labelColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EAF2FF'"
-                    }
-                  }
-                }
-              }
-            },
-            "innerPadding": {
-              "expr": {
-                "Literal": {
-                  "Value": "40L"
+                  "Value": "false"
                 }
               }
             }
@@ -179,7 +172,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Average revenue per film'"
+                  "Value": "'Genre landscape: volume vs rating'"
                 }
               }
             },
@@ -231,7 +224,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ranked bar chart of average revenue per film by genre; Adventure and Animation lead'"
+                  "Value": "'Bubble chart of genres by number of films and weighted rating, sized by average revenue per film, split into four quadrants'"
                 }
               }
             }
@@ -244,7 +237,39 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'x: films (log) · y: weighted rating · bubble: avg revenue per film'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#6C84AB'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
                 }
               }
             }
@@ -352,6 +377,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "BookmarkGroup5e75db3ddd5dca191003",
+      "displayName": "Filter panel",
+      "children": [
+        "Bookmarkc546e43c0e340dd50415",
+        "Bookmark6d47400a56db6df9cd38",
+        "Bookmarka52dae4f7ee52f3e3a67",
+        "Bookmark34e15400781c54b55451",
+        "Bookmark51d2a72c23ab41e8bdd2",
+        "Bookmarkd3c0da9d0145d893c1d1",
+        "Bookmark4c22d110c67c06b33706",
+        "Bookmarka9fd707e07962a07516c"
+      ]
+    }
+  ]
+}

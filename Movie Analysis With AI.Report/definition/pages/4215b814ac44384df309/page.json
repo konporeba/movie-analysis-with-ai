@@ -287,5 +287,27 @@
         }
       }
     ]
-  }
+  },
+  "visualInteractions": [
+    {
+      "source": "7523e42e8963901b9289",
+      "target": "7fe10017ea99b3e9c812",
+      "type": "DataFilter"
+    },
+    {
+      "source": "8c3c0e38474f2846aceb",
+      "target": "7fe10017ea99b3e9c812",
+      "type": "DataFilter"
+    },
+    {
+      "source": "7fe10017ea99b3e9c812",
+      "target": "8c3c0e38474f2846aceb",
+      "type": "DataFilter"
+    },
+    {
+      "source": "7fe10017ea99b3e9c812",
+      "target": "7523e42e8963901b9289",
+      "type": "DataFilter"
+    }
+  ]
 }
